@@ -39,3 +39,8 @@ h3 {
 a {
   text-decoration: underline;
 }
+
+input[type="text"], input[type="password"], input[type="number"] {
+  border: 2px solid var(--foreground);
+  border-radius: 5px;
+}
