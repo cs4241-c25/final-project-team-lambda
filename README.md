@@ -14,4 +14,35 @@ This application is divided into two main routes, `(home)` and `(app)`. The page
 
 Authentication is achieved using NextAuth using the Credentials provider. Server components can access basic user data (such as username) by using the `getSession()` function imported from `@/lib/auth`. Client components can access user data by using the `getSession()` function imported from `next-auth/react`. Importing the right function is important! Once the session has been retrieved, get user info with `session.user`.
 
-Currently, authentication simply verifies if the username and password passed in are "username" and "password" respectively.
+## API
+
+Below are the API routes available under `/api`. Routes provided by NextAuth (`/api/auth/*`) are not included.
+
+`/register`
+---
+
+Request body:
+```
+{
+    username: string,
+    password: string
+}
+```
+
+Response:
+```
+2xx response code:
+{
+    id: string,
+    name: string
+}
+
+4xx response code:
+"error message"
+```
+
+Registers a new user using the given username and password. Returns an error code if:
+- The user already exists
+- The password is less than 8 characters
+- The username is less than 3 characters
+- The registration fails
