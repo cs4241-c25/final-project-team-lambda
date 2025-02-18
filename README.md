@@ -47,6 +47,25 @@ Registers a new user using the given username and password. Returns an error cod
 - The username is less than 3 characters
 - The registration fails
 
+`/scrapbooks/create`
+---
+
+Request body:
+```
+[none]
+```
+
+Response:
+```typescript
+// 2xx response code:
+{ ...IScrapbook }
+
+// 4xx response code:
+"error message"
+```
+
+Creates a new scrapbook owned by an authenticated user, returning the newly created scrapbook. Requires authentication.
+
 ## Data Model
 
 Below are the data structures used to store information in the database.
@@ -70,18 +89,24 @@ The `User` model stores basic information about a user, including a randomized i
 interface IScrapbook {
     _id: string,
     owner: string, // user id
-    name: string,
+    title: string,
     visibility: "public" | "private",
+    pages: Page[],
+    likes: string[]
+}
+
+interface Page {
+    number: number,
     elements: Element[]
 }
 ```
 
-The `Scrapbook` model stores scrapbook metadata as well as a list of its elements, including images and text. The order of `elements` determines the order in which they are layered, with `Element`s later in the list appearing on top of those earlier in the list.
+The `Scrapbook` model stores scrapbook metadata as well as a list of its pages. Each page has a number and a list of elements, including images, text, and shapes. The order of `elements` determines the order in which they are layered, with `Element`s later in the list appearing on top of those earlier in the list.
 
 `Element`
 ---
 ```typescript
-type Element = Image | Text
+type Element = Image | Text | Rectangle | Circle
 
 interface Image {
     type: "image",
@@ -93,6 +118,7 @@ interface Image {
         x: number,
         y: number
     },
+    rotation: number,
     url: string
 }
 
@@ -109,8 +135,39 @@ interface Text {
     content: string,
     font_size: number,
     color: string,
+    rotation: string,
     font: string
+}
+
+interface Rectangle {
+    type: "rectangle",
+    position: {
+        x: number,
+        y: number
+    },
+    size: {
+        x: number,
+        y: number,
+    },
+    rotation: string,
+    color: string
+}
+
+interface Circle {
+    type: "circle",
+    position: {
+        x: number,
+        y: number
+    },
+    size: number,
+    color: string
 }
 ```
 
-The `Element` model stores information for a single element in the scrapbook. This includes an image, with a position, scale, and url, and a block of text, with a position, bounding box size, text content, font size, color, and font style. Each element type has a `type` parameter used to differentiate them when processing.
+The `Element` model stores information for a single element in the scrapbook. This includes:
+- An image, with a position, scale, rotation, and url
+- A block of text, with a position, bounding box size, rotation, text content, font size, color, and font style
+- A rectangle, with a position, size, rotation, and color
+- A circle, with a position, size (radius), and color
+
+Each element type has a `type` parameter used to differentiate them when processing.
