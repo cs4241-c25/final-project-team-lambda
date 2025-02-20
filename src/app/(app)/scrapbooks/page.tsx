@@ -2,7 +2,6 @@ import { getSession } from "@/lib/auth";
 
 export default async function Scrapbooks() {
     const session = await getSession();
-    console.log(session);
     return (
         <main>
             <h1>Scrapbooks</h1>
