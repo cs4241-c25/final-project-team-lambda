@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { getScrapbooks } from "@/lib/db";
 import CreateScrapbook from "./CreateScrapbook";
+import Link from "next/link";
 
 export default async function Scrapbooks() {
     // get session and send request for scrapbooks
@@ -13,7 +14,7 @@ export default async function Scrapbooks() {
             <main>
                 <h1>Scrapbooks</h1>
                 <p>Error getting scrapbooks.</p>
-                <a href="/scrapbooks">Try again</a>
+                <Link href="/scrapbooks">Try again</Link>
             </main>
         )
     } else {
