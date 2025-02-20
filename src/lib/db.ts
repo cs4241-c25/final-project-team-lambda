@@ -9,6 +9,7 @@ const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .e
 
 if (!DB_URI) console.error(NO_URI_ERR);
 
+
 /**
  * Generic type for database operation results
  * @template T The type of data returned on successful operations
@@ -40,7 +41,7 @@ async function connect() {
     } catch (error) {
         console.error('Error connecting to MongoDB: ', error);
     }
-};
+}
 
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
