@@ -14,7 +14,13 @@ export default function ScrapbookPage() {
     const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
     const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
 
-    // load scrapbook
+    // save scrapbook status
+    const [ saveStatus, setSaveStatus ] = useState("Saved");
+
+
+    /**
+     * Fetches the scrapbook from the database
+     */
     useEffect(() => {
         async function fetchScrapbook() {
             setScrapbookStatus("loading");
@@ -31,22 +37,55 @@ export default function ScrapbookPage() {
         fetchScrapbook();
     }, [scrapbookID]);
 
+    /**
+     * Appends a new page to the scrapbook and saves it
+     */
     function appendPage() {
+        if (!scrapbook) return;
+
         // add a new page to the scrapbook
-        setScrapbook(produce(draft => {
-            // since react doesn't re-render on mutations,
-            // we need to use immer to create a new object
+        // since react doesn't re-render on mutations,
+        // we need to use immer to create a new object
+        const newScrapbook = produce(scrapbook, draft => {
             if (!draft) return;
             draft.pages.push({
                 number: draft.pages.length + 1,
                 elements: []
             });
-        }));
+        });
+
+        // update the scrapbook state
+        setScrapbook(newScrapbook);
+        save(newScrapbook);
+    }
+
+    /**
+     * Saves the scrapbook by updating it in the database
+     * @param newScrapbook The new scrapbook to save
+     */
+    async function save(newScrapbook: IScrapbook) {
+        // save the scrapbook
+        setSaveStatus("Saving...");
+        const saveResult = await fetch(`/api/scrapbooks/save`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(newScrapbook)
+        });
+
+        if (saveResult.ok) {
+            setSaveStatus("Saved");
+        } else {
+            const error = await saveResult.text() as string;
+            setSaveStatus(error);
+        }
     }
 
     if (scrapbookStatus === "success" && scrapbook) {
         return (
             <div>
+                <p>{saveStatus}</p>
                 <h1>{scrapbook.title}</h1>
                 <h2>Pages</h2>
                 <ul>
