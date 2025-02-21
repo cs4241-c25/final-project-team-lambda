@@ -1,12 +1,15 @@
-import { getScrapbooks } from "@/lib/db";
+import { getScrapbook } from "@/lib/db";
 import { getSession } from "@/lib/auth";
 
-export async function GET() {
+export async function GET(
+    _req: Request,
+    { params }: { params: Promise<{ scrapbookID: string }> }
+) {
     const session = await getSession();
-    const owner = session?.user.id;
+    const scrapbookID = (await params).scrapbookID;
 
-    // attempt to get scrapbooks
-    const result = await getScrapbooks(owner);
+    // attempt to get scrapbook
+    const result = await getScrapbook(scrapbookID, session?.user.id);
 
     // send result
     if (result.ok) {

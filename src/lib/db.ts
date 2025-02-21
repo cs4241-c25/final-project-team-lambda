@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
-import { User, IUser, Scrapbook, IScrapbook } from './models';
+import { User, IUser, Scrapbook, IScrapbook, Page } from './models';
 
 const DB_URI = process.env.DB_URI;
 const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .env.local';
 
 if (!DB_URI) console.error(NO_URI_ERR);
+
 
 /**
  * Generic type for database operation results
@@ -40,7 +41,7 @@ async function connect() {
     } catch (error) {
         console.error('Error connecting to MongoDB: ', error);
     }
-};
+}
 
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
@@ -137,7 +138,10 @@ export async function createScrapbook(owner: string, title: string): Promise<DBR
         owner,
         title,
         visibility: "public",
-        pages: [],
+        pages: [{
+            number: 1,
+            elements: []
+        }],
         likes: []
     };
     const query = new Scrapbook(newScrapbook);
@@ -170,5 +174,49 @@ export async function getScrapbooks(owner?: string): Promise<DBResult<IScrapbook
     } catch (e) {
         console.log("Error getting scrapbooks: ", e);
         return { ok: false, code: 500, error: "Error getting scrapbooks" };
+    }
+}
+
+/**
+ * Retrieves a scrapbook by its ID
+ * @async
+ * @param {string} id - The ID of the scrapbook
+ * @returns {Promise<DBResult<IScrapbook>>} Result of scrapbook retrieval
+ */
+export async function getScrapbook(id: string, owner?: string): Promise<DBResult<IScrapbook>> {
+    await connect();
+    try {
+        const scrapbook: IScrapbook | null = await Scrapbook.findById(id);
+        if (!scrapbook) return { ok: false, code: 404, error: "Scrapbook not found" };
+        if (scrapbook.visibility == "private" && owner != scrapbook.owner)
+            return { ok: false, code: 403, error: "Unauthorized"}
+        return { ok: true, code: 200, data: scrapbook };
+    } catch (e) {
+        console.log("Error getting scrapbook: ", e);
+        return { ok: false, code: 500, error: "Error getting scrapbook" };
+    }
+}
+
+/**
+ * Updates a scrapbook in the database
+ * @async
+ * @param {IScrapbook} scrapbook - The scrapbook object to update
+ * @param {string} owner - The user ID of the scrapbook owner
+ * @returns {Promise<DBResult<IScrapbook>>} Result of scrapbook update
+ */
+export async function saveScrapbook(scrapbook: IScrapbook, owner: string): Promise<DBResult<IScrapbook>> {
+    await connect();
+    try {
+        // make sure scrapbook exists and owner is authorized
+        const previousScrapbook = await Scrapbook.findById(scrapbook._id);
+        if (!previousScrapbook) return { ok: false, code: 404, error: "Scrapbook not found" };
+        if (previousScrapbook.owner != owner) return { ok: false, code: 403, error: "Unauthorized" };
+
+        // update scrapbook
+        const updatedScrapbook = await Scrapbook.findByIdAndUpdate(scrapbook._id, scrapbook);
+        return { ok: true, code: 200, data: updatedScrapbook };
+    } catch (e) {
+        console.log("Error updating scrapbook: ", e);
+        return { ok: false, code: 500, error: "Error updating scrapbook" };
     }
 }
