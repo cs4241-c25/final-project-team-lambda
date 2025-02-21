@@ -6,7 +6,7 @@ export default function AppLayout({
     children: React.ReactNode;
   }>) {
     return (
-        <body>
+        <body className="flex flex-col h-screen">
             <nav>
                 <ul className="flex items-center gap-4 px-4 py-2">
                     <li><a href="/scrapbooks" className="no-underline"><h2>LifeLog</h2></a></li>

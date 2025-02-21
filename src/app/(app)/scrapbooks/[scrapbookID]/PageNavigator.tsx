@@ -14,17 +14,18 @@ export default function PageNavigator(
     }
 
     return (
-        <div className="flex items-center justify-center w-full h-full bg-gray-200">
+        <div className="flex flex-1 min-h-0 m-4 gap-2">
             { currentPage == 0 ?
                 <div className="w-6"></div> :
-                <button className="w-6" onClick={() => setCurrentPage(currentPage - 1)}>{"<"}</button>
+                <button className="w-6 m-auto" onClick={() => setCurrentPage(currentPage - 1)}>{"<"}</button>
             }
-            <div className="flex-1 h-full">
-                <ScrapbookPage page={pages[currentPage]} numPages={pages.length} />
+            <div className="flex flex-1 min-h-0 flex-col gap-2 overflow-auto">
+                <ScrapbookPage page={pages[currentPage]} />
+                <p className="text-center h-8">{pages[currentPage].number} / {pages.length}</p>
             </div>
             { currentPage < pages.length - 1 ?
-                <button className="w-6" onClick={() => setCurrentPage(currentPage + 1)}>{">"}</button> :
-                <button className="w-6" onClick={addpage}>+</button>
+                <button className="w-6 m-auto" onClick={() => setCurrentPage(currentPage + 1)}>{">"}</button> :
+                <button className="w-6 m-auto" onClick={addpage}>+</button>
             }
         </div>
     );
