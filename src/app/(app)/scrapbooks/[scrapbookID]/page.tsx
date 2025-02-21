@@ -7,7 +7,9 @@ import { produce } from 'immer';
 
 import { IScrapbook } from '@/lib/models';
 
-export default function ScrapbookPage() {
+import PageNavigator from './PageNavigator';
+
+export default function Scrapbook() {
     const { scrapbookID } = useParams<{ scrapbookID: string }>();
 
     // scrapbook state
@@ -84,20 +86,18 @@ export default function ScrapbookPage() {
 
     if (scrapbookStatus === "success" && scrapbook) {
         return (
-            <div>
-                <p>{saveStatus}</p>
-                <h1>{scrapbook.title}</h1>
-                <h2>Pages</h2>
-                <ul>
-                    {scrapbook.pages.map((page) => (
-                        <li key={page.number}>
-                            <Link href={`/scrapbooks/${scrapbookID}/page/${page.number}`}>
-                                Page {page.number}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-                <button onClick={appendPage}>+ Add Page</button>
+            <div className="flex flex-col flex-grow">
+                <header className="flex items-center gap-4 px-4">
+                    <h1>{scrapbook.title}</h1>
+                    <p>{saveStatus}</p>
+                </header>
+                <main className="flex flex-1 p-4 min-h-0">
+                    <section className="w-40">Toolbox</section>
+                    <div className="flex-1 min-w-0">
+                        <PageNavigator pages={scrapbook.pages} appendPage={appendPage} />
+                    </div>
+                    <section className="w-40">Controls</section>
+                </main>
             </div>
         );
     } else if (scrapbookStatus === "loading") {
