@@ -21,6 +21,8 @@ Below are the API routes available under `/api`. Routes provided by NextAuth (`/
 `/register`
 ---
 
+Type: `POST`
+
 Request body:
 ```typescript
 {
@@ -50,6 +52,8 @@ Registers a new user using the given username and password. Returns an error cod
 `/scrapbooks/create`
 ---
 
+Type: `POST`
+
 Request body:
 ```
 [none]
@@ -65,6 +69,48 @@ Response:
 ```
 
 Creates a new scrapbook owned by an authenticated user, returning the newly created scrapbook. Requires authentication.
+
+`/scrapbooks/get/[scrapbookID]`
+---
+
+Type: `GET`
+
+Request body:
+```
+[none]
+```
+
+Response:
+```typescript
+// 2xx response code:
+{ ...IScrapbook }
+
+// 4xx response code:
+"error message"
+```
+
+Gets an individual scrapbook from the database. Returns an error if the scrapbook doesn't exist, or if the scrapbook is private and the user is not authenticated or does not match the scrapbook owner.
+
+`/scrapbooks/save`
+---
+
+Type: `POST`
+
+Request body:
+```typescript
+{ ...IScrapbook }
+```
+
+Response:
+```typescript
+// 2xx response code:
+{ ...IScrapbook }
+
+// 4xx response code:
+"error message"
+```
+
+Updates a scrapbook in the database. Returns an error if the user is not authenticated does not match the owner of the scrapbook.
 
 ## Data Model
 
