@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
-import { User, IUser, Scrapbook, IScrapbook } from './models';
+import { User, IUser, Scrapbook, IScrapbook, Page } from './models';
 
 const DB_URI = process.env.DB_URI;
 const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .env.local';
@@ -138,7 +138,10 @@ export async function createScrapbook(owner: string, title: string): Promise<DBR
         owner,
         title,
         visibility: "public",
-        pages: [],
+        pages: [{
+            number: 1,
+            elements: []
+        }],
         likes: []
     };
     const query = new Scrapbook(newScrapbook);
@@ -171,5 +174,25 @@ export async function getScrapbooks(owner?: string): Promise<DBResult<IScrapbook
     } catch (e) {
         console.log("Error getting scrapbooks: ", e);
         return { ok: false, code: 500, error: "Error getting scrapbooks" };
+    }
+}
+
+/**
+ * Retrieves a scrapbook by its ID
+ * @async
+ * @param {string} id - The ID of the scrapbook
+ * @returns {Promise<DBResult<IScrapbook>>} Result of scrapbook retrieval
+ */
+export async function getScrapbook(id: string, owner?: string): Promise<DBResult<IScrapbook>> {
+    await connect();
+    try {
+        const scrapbook: IScrapbook | null = await Scrapbook.findById(id);
+        if (!scrapbook) return { ok: false, code: 404, error: "Scrapbook not found" };
+        if (scrapbook.visibility == "private" && owner != scrapbook.owner)
+            return { ok: false, code: 403, error: "Unauthorized"}
+        return { ok: true, code: 200, data: scrapbook };
+    } catch (e) {
+        console.log("Error getting scrapbook: ", e);
+        return { ok: false, code: 500, error: "Error getting scrapbook" };
     }
 }

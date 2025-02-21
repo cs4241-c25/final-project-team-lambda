@@ -32,7 +32,7 @@ const scrapbookSchema = new mongoose.Schema({
 
 export let Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
 
-interface Page {
+export interface Page {
     number: number,
     elements: Element[]
 }
