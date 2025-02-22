@@ -20,7 +20,9 @@ export interface IScrapbook {
     title: string,
     visibility: "public" | "private",
     pages: Page[],
-    likes: string[]
+    likes: string[],
+    width: number,
+    height: number,
 }
 
 const scrapbookSchema = new mongoose.Schema({

@@ -126,34 +126,35 @@ export async function register(username: string, password: string): Promise<Logi
  * Creates a new scrapbook for a user
  * @async
  * @param {string} owner - The user ID of the scrapbook owner
- * @param {string} title - The title of the scrapbook
+ * @param {Partial<IScrapbook>} data - data related to scrapbook (title, visibility, width, height)
  * @returns {Promise<DBResult<IScrapbook>>} Result of scrapbook creation
  */
-export async function createScrapbook(owner: string, title: string): Promise<DBResult<IScrapbook>> {
+export async function createScrapbook(owner: string, data: Partial<IScrapbook>): Promise<DBResult<IScrapbook>> {
     await connect();
     const id = uuid();
 
+    // added width/height
     const newScrapbook: IScrapbook = {
         _id: id,
         owner,
-        title,
-        visibility: "public",
-        pages: [{
-            number: 1,
-            elements: []
-        }],
-        likes: []
+        title: data.title || "Untitled Scrapbook",
+        visibility: data.visibility || "public",
+        pages: [{ number: 1, elements: [] }],
+        likes: [],
+        width: data.width || 816,
+        height: data.height || 1056
     };
-    const query = new Scrapbook(newScrapbook);
 
     try {
+        const query = new Scrapbook(newScrapbook);
         await query.save();
         return { ok: true, code: 201, data: newScrapbook };
-    } catch(e) {
-        console.log("Error creating scrapbook: ", e);
+    } catch (e) {
+        console.error("Error creating scrapbook:", e);
         return { ok: false, code: 500, error: "Error creating scrapbook" };
     }
 }
+
 
 /**
  * Retrieves scrapbooks from the database

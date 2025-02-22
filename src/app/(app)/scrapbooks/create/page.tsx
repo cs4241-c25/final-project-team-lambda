@@ -3,10 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-export default function CreateScrapbook() {
+export default function CreateScrapbookPage() {
     const router = useRouter();
 
-    // Form state
     const [title, setTitle] = useState("");
     const [width, setWidth] = useState(816);
     const [height, setHeight] = useState(1056);
@@ -38,7 +37,7 @@ export default function CreateScrapbook() {
 
     return (
         <div>
-            <h2>Create Scrapbook</h2>
+            <h2>Create a New Scrapbook</h2>
             <form onSubmit={handleSubmit}>
                 <label>
                     Scrapbook Name:
