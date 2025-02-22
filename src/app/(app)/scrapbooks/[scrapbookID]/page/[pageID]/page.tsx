@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
 import { produce } from "immer";
+import Canvas from "../../ScrapbookCanvas";
+import Toolbox from "../../Toolbox";
 
 import { IScrapbook } from "@/lib/models";
 
@@ -81,7 +83,8 @@ export default function ScrapbookPageDetail() {
         return (
             <div>
                 <p>{saveStatus}</p>
-                <h1>{scrapbook.title} - Page {currentPageNumber}</h1>
+                <Toolbox />
+                <Canvas />
                 {/* Navigation Controls */}
                 <div style={{ display: "flex", justifyContent: "center", gap: "20px" }}>
                     {/* Left Arrow: Show only if it's not page 1 */}

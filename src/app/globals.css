@@ -18,6 +18,13 @@
 
 /* default styles */
 
+@font-face {
+  font-family: 'Garogier';
+  src: url('/src/fonts/Garogier.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
