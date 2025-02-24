@@ -110,8 +110,8 @@ export default function Scrapbook() {
             const randomSeed = Math.floor(Math.random() * 200);
             element = {
                 type: "image",
-                position: { x: 150, y: 150 },
-                scale: { x: 1, y: 1 },
+                position: { x: 200, y: 200 },
+                size: { x: 150, y: 150 },
                 rotation: 0,
                 url: `https://picsum.photos/seed/${randomSeed}/150`,
             }
@@ -127,7 +127,7 @@ export default function Scrapbook() {
             element = {
                 type: "circle",
                 position: { x: 100, y: 100 },
-                size: 50,
+                size: 100,
                 color: "#E4B4B4",
             }
         } else {
@@ -228,21 +228,7 @@ export default function Scrapbook() {
                         updateSelectedElement, deleteSelectedElement
                     }}>
                         <Toolbox />
-                        <div className="flex flex-col flex-1 min-h-0">
-                            {/* buttons to add elements */}
-                            <div className="flex gap-4 mt-4">
-                                {["text", "image", "rectangle", "circle"].map((type) => (
-                                    <button
-                                        key={type}
-                                        onClick={() => addElement(type)}
-                                        className="p-2 bg-[#9DA993] text-white rounded"
-                                    >
-                                        {type.charAt(0).toUpperCase() + type.slice(1)}
-                                    </button>
-                                ))}
-                            </div>
-                            <PageNavigator pages={scrapbook.pages} appendPage={appendPage} />
-                        </div>
+                        <PageNavigator pages={scrapbook.pages} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
                 </main>
             </div>
