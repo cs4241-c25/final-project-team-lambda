@@ -12,9 +12,7 @@ export default function ScrapbookPage({ size, page, zoom }: { size: {width: numb
     }
     
     return (
-        <div id="canvas" className={`
-            border-2 border-gray-300 rounded-sm text-gray-300 relative
-        `}
+        <div id="canvas" className="border-2 border-gray-300 rounded-sm text-gray-300 absolute"
         style={{
             aspectRatio: `${size.width} / ${size.height}`,
             width: size.width,

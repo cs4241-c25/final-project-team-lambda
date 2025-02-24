@@ -5,7 +5,7 @@ export default function Toolbox() {
     const { selectedElement, updateSelectedElement, deleteSelectedElement } = useContext(ScrapbookContext);
 
     if (!selectedElement) return (
-        <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full"></div>
+        <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex-shrink-0"></div>
     )
 
     const handleUpdate = (key: string, value: any) => {
@@ -13,7 +13,7 @@ export default function Toolbox() {
     };
 
     return (
-        <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex flex-col">
+        <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex flex-col flex-shrink-0">
             <h3 className="text-md font-semibold mb-2" style={{ fontFamily: 'Garogier' }}>
                 {selectedElement.type.charAt(0).toUpperCase() + selectedElement.type.slice(1)} Properties
             </h3>

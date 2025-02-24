@@ -47,7 +47,7 @@ export default function PageNavigator(
                         <button onClick={() => setZoom(zoom * 1.1)}>+</button>
                     </div>
                 </div>
-                <div className="min-h-0 w-full mb-auto overflow-auto">
+                <div className="w-full mb-auto overflow-auto relative h-full">
                     <ScrapbookPage
                         size={{width: scrapbook.width, height: scrapbook.height}}
                         page={scrapbook.pages.find((p) => p.number == selectedPage)!}
