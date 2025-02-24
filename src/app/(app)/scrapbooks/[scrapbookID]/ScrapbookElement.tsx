@@ -33,12 +33,12 @@ export default function ScrapbookElement({ el }: { el: Element }) {
             top: el.position.y,
             left: el.position.x,
             transform: `rotate(${el.rotation}deg)`,
-            width: el.scale.x * 100,
-            height: el.scale.y * 100,
+            width: el.size.x,
+            height: el.size.y,
             border: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
             backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
         }}>
-            <img src={el.url} alt="Element" style={{ width: el.scale.x * 100, height: el.scale.y * 100 }} />
+            <img src={el.url} alt="Element" className="w-full h-full"/>
         </div>
     )
 

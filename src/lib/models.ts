@@ -47,10 +47,10 @@ interface Image {
         x: number,
         y: number
     },
-    scale: {
+    size: {
         x: number,
         y: number
-    },
+    }
     rotation: number,
     url: string
 }
