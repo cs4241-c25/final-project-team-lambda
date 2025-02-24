@@ -29,6 +29,10 @@ const scrapbookSchema = new mongoose.Schema({
     _id: String,
     owner: { type: String, required: true },
     title: { type: String, required: true },
+    visibility: { type: String, required: true },
+    likes: { type: Array<String> },
+    width: { type: Number, required: true },
+    height: { type: Number, required: true },
     pages: { type: Array<Page> }
 });
 
