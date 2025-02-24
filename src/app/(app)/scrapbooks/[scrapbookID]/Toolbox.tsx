@@ -18,6 +18,7 @@ export default function Toolbox() {
                 {selectedElement.type.charAt(0).toUpperCase() + selectedElement.type.slice(1)} Properties
             </h3>
 
+            {/* position */}
             <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Position:</label>
             <div className="flex gap-2">
                 <input
@@ -34,8 +35,41 @@ export default function Toolbox() {
                 />
             </div>
 
+            {/* size */}
+            {selectedElement.type != "circle" && (
+                <div>
+                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
+                    <div className="flex gap-2">
+                        <input
+                            type="number"
+                            value={selectedElement.size.x}
+                            onChange={(e) => handleUpdate("size", { ...selectedElement.size, x: parseInt(e.target.value) })}
+                            className="w-full border p-2 rounded" placeholder="Width"
+                        />
+                        <input
+                            type="number"
+                            value={selectedElement.size.y}
+                            onChange={(e) => handleUpdate("size", { ...selectedElement.size, y: parseInt(e.target.value) })}
+                            className="w-full border p-2 rounded" placeholder="Height"
+                        />
+                    </div>
+                </div>
+            )}
+            {selectedElement.type === "circle" && (
+                <div>
+                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
+                    <input
+                        type="number"
+                        value={selectedElement.size}
+                        onChange={(e) => handleUpdate("size", parseInt(e.target.value))}
+                        className="w-full border p-2 rounded" placeholder="Diameter"
+                    />
+                </div>
+            )}
+
+            {/* text properties */}
             {selectedElement.type === "text" && (
-                <>
+                <div>
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Content:</label>
                     <input
                         type="text"
@@ -63,11 +97,10 @@ export default function Toolbox() {
                         <option>Courier New</option>
                         <option>Verdana</option>
                     </select>
-                </>
+                </div>
             )}
 
-            <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
-
+            {/* image properties */}
             {selectedElement.type === "image" && (
                 <>
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>URL:</label>
@@ -80,7 +113,8 @@ export default function Toolbox() {
                 </>
             )}
 
-            {selectedElement.type !== "image" && selectedElement.type !== "circle" &&
+            {/* color */}
+            {selectedElement.type !== "image" &&
                 <div>
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Color:</label>
                     <input
@@ -89,23 +123,11 @@ export default function Toolbox() {
                         onChange={(e) => handleUpdate("color", e.target.value)}
                         className="w-full"
                     />
-                    <input
-                        type="number"
-                        value={selectedElement.size.x}
-                        onChange={(e) => handleUpdate("size", { ...selectedElement.size, x: parseInt(e.target.value) })}
-                        className="w-full border p-2 rounded"
-                        placeholder="Width"
-                    />
-                    <input
-                        type="number"
-                        value={selectedElement.size.y}
-                        onChange={(e) => handleUpdate("size", { ...selectedElement.size, y: parseInt(e.target.value) })}
-                        className="w-full border p-2 rounded"
-                        placeholder="Height" />
                 </div>
             }
 
-            { selectedElement.type !== "circle" &&
+            {/* rotation */}
+            { selectedElement.type !== "circle" && (
             <div>
                 <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Rotation:</label>
                 <input
@@ -118,7 +140,7 @@ export default function Toolbox() {
                     step="1"
                 />
             </div>
-            }
+            )}
 
             <button
                 onClick={deleteSelectedElement}
