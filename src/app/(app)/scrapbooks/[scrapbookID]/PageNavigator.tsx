@@ -1,24 +1,28 @@
-import { Page } from "@/lib/models";
-
+// Library imports
 import { useState, useContext } from "react";
+
+// Model imports
+import { Page, IScrapbook } from "@/lib/models";
+
+// Component imports
 import ScrapbookPage from "./ScrapbookPage";
 import ScrapbookContext from "./ScrapbookContext";
 
 export default function PageNavigator(
-    { pages, appendPage, addElement }:
-    { pages: Page[], appendPage: () => void, addElement: (type: string) => void }
+    { scrapbook, appendPage, addElement }:
+    { scrapbook: IScrapbook, appendPage: () => void, addElement: (type: string) => void }
 ) {
     const { selectedPage, setSelectedPage } = useContext(ScrapbookContext);
 
     const [ zoom, setZoom ] = useState(1);
 
-    function addpage() {
+    function addPage() {
         appendPage();
-        setSelectedPage(pages.length);
+        setSelectedPage(selectedPage + 1);
     }
 
     return (
-        <div className="flex flex-1 min-h-0 m-4 gap-2">
+        <div className="flex flex-1 min-h-0 mx-4 gap-2">
             { selectedPage == 1 ?
                 <div className="w-6"></div> :
                 <button className="w-6 m-auto" onClick={() => setSelectedPage(selectedPage - 1)}>{"<"}</button>
@@ -44,13 +48,17 @@ export default function PageNavigator(
                     </div>
                 </div>
                 <div className="min-h-0 w-full mb-auto overflow-auto">
-                    <ScrapbookPage page={pages.find((p) => p.number == selectedPage)!} zoom={zoom} />
+                    <ScrapbookPage
+                        size={{width: scrapbook.width, height: scrapbook.height}}
+                        page={scrapbook.pages.find((p) => p.number == selectedPage)!}
+                        zoom={zoom}
+                    />
                 </div>
-                <p className="text-center h-8 shrink-0">{selectedPage} / {pages.length}</p>
+                <p className="text-center h-8 shrink-0">{selectedPage} / {scrapbook.pages.length}</p>
             </div>
-            { selectedPage < pages.length - 1 ?
+            { selectedPage < scrapbook.pages.length ?
                 <button className="w-6 m-auto" onClick={() => setSelectedPage(selectedPage + 1)}>{">"}</button> :
-                <button className="w-6 m-auto" onClick={addpage}>+</button>
+                <button className="w-6 m-auto" onClick={addPage}>+</button>
             }
         </div>
     );

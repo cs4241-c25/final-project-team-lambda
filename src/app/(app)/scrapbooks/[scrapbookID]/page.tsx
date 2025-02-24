@@ -1,17 +1,16 @@
 "use client";
 
-import Link from 'next/link';
+// Library imports
 import { useParams } from 'next/navigation';
 import { useEffect, useState} from 'react';
 import { produce } from 'immer';
-import { Element } from '@/lib/models';
 
+// Model imports
+import { Element, IScrapbook } from '@/lib/models';
+
+// Component imports
 import Toolbox from './Toolbox';
-
-import { IScrapbook } from '@/lib/models';
-
 import PageNavigator from './PageNavigator';
-
 import ScrapbookContext from './ScrapbookContext';
 
 export default function Scrapbook() {
@@ -19,11 +18,11 @@ export default function Scrapbook() {
 
     // scrapbook state
     const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
-    const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
     const [ selectedElement, setSelectedElement ] = useState<any | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
-    // save scrapbook status
+    // status messages
+    const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
     const [ saveStatus, setSaveStatus ] = useState("Saved");
 
     /**
@@ -90,7 +89,11 @@ export default function Scrapbook() {
         }
     }
 
-    // function to add a new element
+
+    /**
+     * Adds a new element to the scrapbook
+     * @param type The type of element to add
+     */
     const addElement = (type: string) => {
         if (!scrapbook) return;
 
@@ -145,6 +148,10 @@ export default function Scrapbook() {
         setScrapbook(newScrapbook);
     };
 
+    /**
+     * Updates the selected element in the scrapbook
+     * @param element The new element to replace the old one
+     */
     function updateSelectedElement(element: Element) {
         if (!scrapbook) return;
 
@@ -172,6 +179,9 @@ export default function Scrapbook() {
         setSelectedElement(element);
     }
 
+    /**
+     * Deletes the selected element from the scrapbook
+     */
     function deleteSelectedElement() {
         if (!scrapbook || !selectedElement) return;
 
@@ -228,7 +238,7 @@ export default function Scrapbook() {
                         updateSelectedElement, deleteSelectedElement
                     }}>
                         <Toolbox />
-                        <PageNavigator pages={scrapbook.pages} appendPage={appendPage} addElement={addElement} />
+                        <PageNavigator scrapbook={scrapbook} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
                 </main>
             </div>
