@@ -24,10 +24,11 @@ const ScrapbookCanvas = () => {
     // function to delete the selected element
     const deleteElement = () => {
         if (selectedElement) {
-            setElements(elements.filter((el) => el !== selectedElement));
+            setElements((prevElements) => prevElements.filter((el) => el.id !== selectedElement.id));
             setSelectedElement(null);
         }
     };
+
 
     // function to add a new element
     const addElement = (type: string) => {
@@ -45,8 +46,8 @@ const ScrapbookCanvas = () => {
             }),
             ...(type === "image" && {
                 type: "image",
-                scale: { x: 1, y: 1 },
-                url: "",
+                size: { x: 1200, y: 1200 },
+                url: "https://www.communitycatspodcast.com/wp-content/uploads/2023/03/Cat6.jpg",
             }),
             ...(type === "rectangle" && {
                 type: "rectangle",
@@ -109,7 +110,8 @@ const ScrapbookCanvas = () => {
                                     </p>
                                 )}
                                 {el.type === "image" && (
-                                    <img src={el.url} alt="Element" style={{ width: el.scale.x * 100, height: el.scale.y * 100 }} />
+                                    <img src={el.url} alt="Element" style={{width: el.size.x, height: el.size.y}}/>
+
                                 )}
                                 {el.type === "rectangle" && (
                                     <div style={{ width: el.size.x, height: el.size.y, backgroundColor: el.color }} />
