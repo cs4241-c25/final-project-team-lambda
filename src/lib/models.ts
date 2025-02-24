@@ -20,7 +20,9 @@ export interface IScrapbook {
     title: string,
     visibility: "public" | "private",
     pages: Page[],
-    likes: string[]
+    likes: string[],
+    width: number,
+    height: number,
 }
 
 const scrapbookSchema = new mongoose.Schema({
@@ -66,7 +68,7 @@ interface Text {
     content: string,
     font_size: number,
     color: string,
-    rotation: string,
+    rotation: number,
     font: string
 }
 
@@ -80,7 +82,7 @@ interface Rectangle {
         x: number,
         y: number,
     },
-    rotation: string,
+    rotation: number,
     color: string
 }
 
