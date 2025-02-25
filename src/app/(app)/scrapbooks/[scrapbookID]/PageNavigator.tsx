@@ -1,5 +1,5 @@
 // Library imports
-import { useState, useContext } from "react";
+import { useState, useContext, useRef } from "react";
 
 // Model imports
 import { Page, IScrapbook } from "@/lib/models";
@@ -13,12 +13,23 @@ export default function PageNavigator(
     { scrapbook: IScrapbook, appendPage: () => void, addElement: (type: string) => void }
 ) {
     const { selectedPage, setSelectedPage } = useContext(ScrapbookContext);
+    const container = useRef<HTMLDivElement>(null);
 
     const [ zoom, setZoom ] = useState(1);
 
     function addPage() {
         appendPage();
         setSelectedPage(selectedPage + 1);
+    }
+
+    function fitWidth() {
+        const containerWidth = container.current?.clientWidth;
+        setZoom(containerWidth ? containerWidth / scrapbook.width : 1);
+    }
+
+    function fitHeight() {
+        const containerHeight = container.current?.clientHeight;
+        setZoom(containerHeight ? containerHeight / scrapbook.height : 1);
     }
 
     return (
@@ -43,11 +54,12 @@ export default function PageNavigator(
                     </div>
                     <div className="flex gap-2 [&_*]:bg-[#9DA993] [&_*]:text-white [&_*]:rounded [&_*]:w-10">
                         <button onClick={() => setZoom(zoom / 1.1)}>-</button>
-                        <button onClick={() => setZoom(1)}>↔</button>
+                        <button onClick={() => fitWidth()}>↔</button>
+                        <button onClick={() => fitHeight()}>↕</button>
                         <button onClick={() => setZoom(zoom * 1.1)}>+</button>
                     </div>
                 </div>
-                <div className="w-full mb-auto overflow-auto relative h-full">
+                <div className="w-full mb-auto overflow-auto relative h-full" ref={container}>
                     <ScrapbookPage
                         size={{width: scrapbook.width, height: scrapbook.height}}
                         page={scrapbook.pages.find((p) => p.number == selectedPage)!}
