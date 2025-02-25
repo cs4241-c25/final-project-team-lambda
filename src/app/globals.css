@@ -7,6 +7,20 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --darkestgreen: #415141;
+  --darkgreen: #6D886D;
+  --mediumgreen: #7B997B;
+  --lightgreen: #90B390;
+  --darkblue: #7883A9;
+  --mediumblue: #8A97C2;
+  --lightblue: #9AA9D9;
+  --darkpink: #996E6C;
+  --mediumpink: #C28C8A;
+  --lightpink: #DD9F9D;
+  --darkpurple: #7B6B85;
+  --mediumpurple: #8E7B99;
+  --lightpurple: #AB94B9;
+
 }
 
 /* @media (prefers-color-scheme: dark) {
@@ -21,11 +35,14 @@
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'EB Garamond', serif;
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 2em;
+  font-family: Georgia, serif;
+  margin: 0.67em 0;
+  font-weight: inherit;
 }
 
 h2 {
@@ -34,6 +51,10 @@ h2 {
 
 h3 {
   font-size: 1.25rem;
+}
+
+p{
+  font-size: 1.25em;
 }
 
 a {
