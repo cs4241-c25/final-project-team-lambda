@@ -1,7 +1,7 @@
 "use client";
 
 // Library imports
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { useEffect, useState} from 'react';
 import { produce } from 'immer';
@@ -16,6 +16,7 @@ import PageNavigator from './PageNavigator';
 import ScrapbookContext from './ScrapbookContext';
 
 export default function Scrapbook() {
+    const router = useRouter();
     const { data: session, status } = useSession()
     const { scrapbookID } = useParams<{ scrapbookID: string }>();
 
@@ -38,11 +39,12 @@ export default function Scrapbook() {
             if (res.ok) {
                 const data = await res.json() as IScrapbook;
                 setScrapbook(data);
+                setScrapbookStatus("success");
             } else {
+                if (res.status === 403) router.push("/login");
                 const error = await res.text() as string;
                 setScrapbookStatus(error);
             }
-            setScrapbookStatus("success");
         }
         fetchScrapbook();
     }, [scrapbookID]);
