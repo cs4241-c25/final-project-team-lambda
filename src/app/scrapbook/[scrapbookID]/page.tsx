@@ -2,8 +2,10 @@
 
 // Library imports
 import { useParams } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState} from 'react';
 import { produce } from 'immer';
+import { useSession } from 'next-auth/react';
 
 // Model imports
 import { Element, IScrapbook } from '@/lib/models';
@@ -14,6 +16,7 @@ import PageNavigator from './PageNavigator';
 import ScrapbookContext from './ScrapbookContext';
 
 export default function Scrapbook() {
+    const { data: session, status } = useSession()
     const { scrapbookID } = useParams<{ scrapbookID: string }>();
 
     // scrapbook state
@@ -224,13 +227,23 @@ export default function Scrapbook() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [deleteSelectedElement]);
 
+    function Header() {
+        return (
+            <header className="flex items-center gap-4 px-4 py-2">
+                <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">{"<"}</Link>
+                <h1>{scrapbook?.title}</h1>
+                <p>{saveStatus}</p>
+                { session?.user && 
+                    <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
+                }
+            </header>
+        );
+    }
+
     if (scrapbookStatus === "success" && scrapbook) {
         return (
-            <div className="flex flex-1 min-h-0 flex-col">
-                <header className="flex items-center gap-4 px-4">
-                    <h1>{scrapbook.title}</h1>
-                    <p>{saveStatus}</p>
-                </header>
+            <body className="flex flex-col h-screen">
+                <Header />
                 <main className="flex flex-1 min-h-0">
                     <ScrapbookContext.Provider value={{
                         selectedElement, setSelectedElement,
@@ -241,11 +254,21 @@ export default function Scrapbook() {
                         <PageNavigator scrapbook={scrapbook} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
                 </main>
-            </div>
+            </body>
         );
     } else if (scrapbookStatus === "loading") {
-        return <div>Loading...</div>;
+        return (
+            <body>
+                <Header />
+                <div>Loading...</div>
+            </body>
+        );
     } else {
-        return <div>Error: {scrapbookStatus}</div>;
+        return (
+            <body>
+                <Header />
+                <div>Error: {scrapbookStatus}</div>
+            </body>
+        );
     }
 }
