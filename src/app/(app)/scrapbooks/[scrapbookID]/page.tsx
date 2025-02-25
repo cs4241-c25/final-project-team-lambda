@@ -23,7 +23,8 @@ export default function Scrapbook() {
 
     // status messages
     const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
-    const [ saveStatus, setSaveStatus ] = useState("Saved");
+    const [ saveStatus, setSaveStatus ] = useState("");
+    const [ timeSinceSave, setTimeSinceSave ] = useState(new Date(0));
 
     /**
      * Fetches the scrapbook from the database
@@ -35,11 +36,11 @@ export default function Scrapbook() {
             if (res.ok) {
                 const data = await res.json() as IScrapbook;
                 setScrapbook(data);
+                setScrapbookStatus("success");
             } else {
                 const error = await res.text() as string;
                 setScrapbookStatus(error);
             }
-            setScrapbookStatus("success");
         }
         fetchScrapbook();
     }, [scrapbookID]);
@@ -67,10 +68,22 @@ export default function Scrapbook() {
     }
 
     /**
-     * Saves the scrapbook by updating it in the database
+     * Attempts to save the scrapbook by updating it in the database
      * @param newScrapbook The new scrapbook to save
      */
     async function save(newScrapbook: IScrapbook) {
+        // determine if the scrapbook has changed
+        if (JSON.stringify(scrapbook) === JSON.stringify(newScrapbook)) return;
+
+        // determine if it has been long enough since last save
+        const now = new Date();
+        const timeSinceLastSave = now.getTime() - timeSinceSave.getTime();
+        if (timeSinceLastSave < 10000) {
+            // if it hasn't been long enough, just update the status
+            setSaveStatus("Unsaved changes");
+            return;
+        }
+
         // save the scrapbook
         setSaveStatus("Saving...");
         const saveResult = await fetch(`/api/scrapbooks/save`, {
@@ -83,6 +96,7 @@ export default function Scrapbook() {
 
         if (saveResult.ok) {
             setSaveStatus("Saved");
+            setTimeSinceSave(new Date());
         } else {
             const error = await saveResult.text() as string;
             setSaveStatus(error);
@@ -177,6 +191,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(element);
+        save(newScrapbook);
     }
 
     /**
