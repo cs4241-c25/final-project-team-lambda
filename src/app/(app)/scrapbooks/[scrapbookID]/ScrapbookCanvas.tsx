@@ -46,8 +46,8 @@ const ScrapbookCanvas = () => {
             }),
             ...(type === "image" && {
                 type: "image",
-                size: { x: 1200, y: 1200 },
-                url: "https://www.communitycatspodcast.com/wp-content/uploads/2023/03/Cat6.jpg",
+                size: { x: 0, y: 0 },
+                url: "",
             }),
             ...(type === "rectangle" && {
                 type: "rectangle",
@@ -109,10 +109,22 @@ const ScrapbookCanvas = () => {
                                         {el.content}
                                     </p>
                                 )}
-                                {el.type === "image" && (
-                                    <img src={el.url} alt="Element" style={{width: el.size.x, height: el.size.y}}/>
-
+                                {el.type === "image" && el.url && (
+                                    <>
+                                        {console.log("Rendering Image with URL:", el.url)} {/* Debugging */}
+                                        <img
+                                            src={el.url}
+                                            alt="Scrapbook Image"
+                                            style={{ width: el.size.x, height: el.size.y }}
+                                            onError={(e) => {
+                                                console.error("Image failed to load:", el.url);
+                                                e.currentTarget.style.display = 'none';
+                                            }}
+                                        />
+                                    </>
                                 )}
+
+
                                 {el.type === "rectangle" && (
                                     <div style={{ width: el.size.x, height: el.size.y, backgroundColor: el.color }} />
                                 )}

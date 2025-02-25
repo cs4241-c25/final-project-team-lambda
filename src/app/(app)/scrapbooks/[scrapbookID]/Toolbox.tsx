@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import ImageUpload from "./ImageUpload";
 
 const Toolbox = ({ selectedElement, onUpdateElement, deleteElement }: any) => {
     if (!selectedElement) return null;
@@ -104,13 +105,17 @@ const Toolbox = ({ selectedElement, onUpdateElement, deleteElement }: any) => {
 
             {selectedElement.type === "image" && (
                 <>
-                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>URL:</label>
-                    <input
-                        type="text"
-                        value={selectedElement.url}
-                        onChange={(e) => handleUpdate("url", e.target.value)}
-                        className="w-full border p-2 rounded"
+                    <label className="block text-sm">Upload Image:</label>
+                    <ImageUpload
+                        onUpload={(url, width, height) => {
+                            onUpdateElement({
+                                ...selectedElement,
+                                url,
+                                size: { x: width, y: height }
+                            });
+                        }}
                     />
+
                 </>
             )}
 
