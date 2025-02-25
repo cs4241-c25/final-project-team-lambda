@@ -15,7 +15,19 @@ export default function PageNavigator(
     const { selectedPage, setSelectedPage } = useContext(ScrapbookContext);
     const container = useRef<HTMLDivElement>(null);
 
-    const [ zoom, setZoom ] = useState(1);
+    const [ zoom, _setZoom ] = useState(1);
+    const [ containerPadding, setContainerPadding ] = useState(0);
+
+    function setZoom(value: number) {
+        _setZoom(value);
+
+        // check if we need to center the div
+        if (!container.current) return;
+        const containerWidth = container.current.clientWidth;
+        const delta = containerWidth - (scrapbook.width * value);
+        if (delta > 0) setContainerPadding(delta / 2);
+        else setContainerPadding(0);
+    }
 
     function addPage() {
         appendPage();
@@ -59,7 +71,8 @@ export default function PageNavigator(
                         <button onClick={() => setZoom(zoom * 1.1)}>+</button>
                     </div>
                 </div>
-                <div className="w-full mb-auto overflow-auto relative h-full" ref={container}>
+                <div className="w-full mb-auto overflow-auto relative h-full" ref={container}
+                style={{paddingLeft: containerPadding, paddingRight: containerPadding}}>
                     <ScrapbookPage
                         size={{width: scrapbook.width, height: scrapbook.height}}
                         page={scrapbook.pages.find((p) => p.number == selectedPage)!}
