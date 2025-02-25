@@ -20,6 +20,10 @@ export default function CreateScrapbook() {
     }
 
     return (
-        <button onClick={createScrapbook}>+</button>
-    );
+        <button
+            onClick={createScrapbook}
+            className="flex items-center justify-center w-10 h-10 bg-[var(--darkestgreen)] text-white rounded-full shadow hover:bg-[var(--darkgreen)] transition"
+        >
+            +
+        </button>    );
 }

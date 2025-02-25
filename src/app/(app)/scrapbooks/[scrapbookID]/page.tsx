@@ -82,6 +82,26 @@ export default function ScrapbookPage() {
         }
     }
 
+    /**
+     * Deletes the current scrapbook
+     * @param scrapbookID takes scrapbook and deletes it from database
+     */
+    async function deleteScrapbook(scrapbookID: string) {
+        const res = await fetch("/api/scrapbooks/delete", {
+            method: "DELETE",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ scrapbookID }),
+        });
+
+        if (res.ok) {
+            console.log("Scrapbook deleted successfully");
+            window.location.href = "/scrapbooks"; // Redirect to scrapbook list after deletion - or router.push("/scrapbooks")
+        } else {
+            const errorText = await res.text();
+            console.error("Error deleting scrapbook:", errorText);
+        }
+    }
+
     if (scrapbookStatus === "success" && scrapbook) {
         return (
             <div>
@@ -97,6 +117,10 @@ export default function ScrapbookPage() {
                         </li>
                     ))}
                 </ul>
+                <button
+                    onClick={() => { if (confirm("Are you sure you want to delete this scrapbook?")) {deleteScrapbook(scrapbookID);}}}>
+                    Delete
+                </button>
                 <button onClick={appendPage}>+ Add Page</button>
             </div>
         );
