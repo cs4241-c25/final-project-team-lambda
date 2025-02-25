@@ -222,6 +222,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(null);
+        save(newScrapbook);
     }
 
     useEffect(() => {
