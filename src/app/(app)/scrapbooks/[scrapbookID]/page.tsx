@@ -78,12 +78,16 @@ export default function Scrapbook() {
         // determine if it has been long enough since last save
         const now = new Date();
         const timeSinceLastSave = now.getTime() - timeSinceSave.getTime();
-        if (timeSinceLastSave < 10000) {
+        if (timeSinceLastSave < 5000) {
             // if it hasn't been long enough, just update the status
             setSaveStatus("Unsaved changes");
             return;
         }
 
+        forceSave(newScrapbook);
+    }
+
+    async function forceSave(newScrapbook: IScrapbook) {
         // save the scrapbook
         setSaveStatus("Saving...");
         const saveResult = await fetch(`/api/scrapbooks/save`, {
@@ -246,6 +250,9 @@ export default function Scrapbook() {
                 <header className="flex items-center gap-4 px-4">
                     <h1>{scrapbook.title}</h1>
                     <p>{saveStatus}</p>
+                    { saveStatus === "Unsaved changes" &&
+                        <button onClick={() => forceSave(scrapbook)}>Save</button>
+                    }
                 </header>
                 <main className="flex flex-1 min-h-0">
                     <ScrapbookContext.Provider value={{
