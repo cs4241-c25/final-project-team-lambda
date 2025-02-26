@@ -1,20 +1,40 @@
-import { getSession } from "@/lib/auth";
-import {mockProviders, mockSession} from "next-auth/client/__tests__/helpers/mocks";
-//import user = mockSession.user;
-//import credentials = mockProviders.credentials;
+"use client";
+//import { useSession } from "@/lib/auth";
+import React, { useState, ChangeEvent } from "react";
+import {useSession} from "next-auth/react";
 
-export default async function Profile() {
-    const session = await getSession();
-    const user = session
+export default function Profile() {
+    const {data: session} = useSession();
+
+    const [isChecked, setIsChecked] = useState(false);
+
+    if (!(session?.user)) return null;
+
     console.log(session.user.name);
+
+    const handCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsChecked(event.target.checked);
+        if (event.target.checked) {
+            console.log("Checked");
+        } else {
+            console.log("Unchecked")
+        }
+    }
 
     return (
         <main>
             <h1>Profile</h1>
             <h2>Image: </h2>
-            <h2>Name: </h2>
-            <h2>Username: </h2>
-            <h2>Password: </h2>
+            <form>
+
+                <label htmlFor="name" >Name: </label>
+                <input type="text" id="name" name={"name"} defaultValue={session.user.name}/>
+                <input type={"checkbox"} checked={isChecked} onChange={handCheckboxChange}/>
+
+                <h2>Name: { session.user.name }</h2>
+                <h2>Username:{ session.user.name } </h2>
+
+            </form>
         </main>
     );
 }
