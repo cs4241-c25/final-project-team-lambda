@@ -8,7 +8,7 @@ export async function POST(req: Request) {
             return NextResponse.json({ error: "Missing file ID" }, { status: 400 });
         }
 
-        console.log("Deleting ImageKit file:", fileId); // Debugging
+        console.log("Deleting ImageKit file:", fileId);
 
         const response = await fetch(`https://api.imagekit.io/v1/files/${fileId}`, {
             method: "DELETE",
