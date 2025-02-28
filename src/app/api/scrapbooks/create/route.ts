@@ -1,23 +1,29 @@
-import { createScrapbook } from "@/lib/db";
+import { NextResponse } from "next/server";
 import { getSession } from "@/lib/auth";
+import { createScrapbook } from "@/lib/db";
 
-export async function POST(_req: Request) {
+export async function POST(req: Request) {
     const session = await getSession();
-    if (!session) return new Response(
-        "Unauthorized", { status: 401 }
-    );
+    if (!session) {
+        return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
 
-    // attempt to create scrapbook
-    const result = await createScrapbook(session.user.id, "New Scrapbook");
+    try {
+        const { title, width, height, visibility } = await req.json();
 
-    // send result
-    if (result.ok) {
-        return Response.json(
-            result.data, { status: result.code }
-        );
-    } else {
-        return new Response(
-            result.error, { status: result.code }
-        )
+        if (!title || !width || !height || !visibility) {
+            return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+        }
+
+        const result = await createScrapbook(session.user.id, { title, width, height, visibility });
+
+        if (!result.ok) {
+            throw new Error(result.error);
+        }
+
+        return NextResponse.json({ _id: result.data._id }, { status: 201 });
+    } catch (error) {
+        console.error("Error creating scrapbook: ", error);
+        return NextResponse.json({ error: "Error creating scrapbook" }, { status: 500 });
     }
 }
