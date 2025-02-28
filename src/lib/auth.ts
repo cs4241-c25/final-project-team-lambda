@@ -1,6 +1,7 @@
-import { AuthOptions, getServerSession } from "next-auth"
+import { AuthOptions, getServerSession, Session, User } from "next-auth"
 import Credentials from "next-auth/providers/credentials";
 import { login } from "./db";
+import { JWT } from "next-auth/jwt";
 
 const authOptions: AuthOptions = {
     providers: [
@@ -10,7 +11,7 @@ const authOptions: AuthOptions = {
                 username: { label: "Username", type: "text" },
                 password: {  label: "Password", type: "password" }
             },
-            async authorize(credentials, _req) {
+            async authorize(credentials) {
                 if (!credentials) return null;
                 const result = await login(credentials.username, credentials.password);
                 return result.data ?? null;
@@ -24,14 +25,14 @@ const authOptions: AuthOptions = {
     },
     callbacks: {
         // Modify these (and types/next-auth.d.ts) to add additional user information
-        async session({ session, token }: { session: any; token: any }) {
+        async session({ session, token }: { session: Session; token: JWT }) {
             if (token) {
-                session.user.name = token.name;
-                session.user.id = token.id;
+                session.user.name = token.name!;
+                session.user.id = token.id! as string;
             }
             return session;
         },
-        async jwt({ token, user }: {token: any; user: any}) {
+        async jwt({ token, user }: {token: JWT; user: User}) {
             if (user) {
                 token.name = user.name;
                 token.id = user.id;

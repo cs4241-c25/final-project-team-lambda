@@ -10,7 +10,7 @@ export default function Toolbox() {
         <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex-shrink-0"></div>
     )
 
-    const handleUpdate = (key: string, value: any) => {
+    const handleUpdate = (key: string, value: unknown) => {
         updateSelectedElement({ ...selectedElement, [key]: value });
     };
 

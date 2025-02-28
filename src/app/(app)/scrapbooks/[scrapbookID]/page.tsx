@@ -1,8 +1,7 @@
 "use client";
 
-// Library imports
 import { useParams } from 'next/navigation';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 
 // Model imports
@@ -18,13 +17,17 @@ export default function Scrapbook() {
 
     // scrapbook state
     const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
-    const [ selectedElement, setSelectedElement ] = useState<any | null>(null);
+    const [ selectedElement, setSelectedElement ] = useState<Element | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
     // status messages
     const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
     const [ saveStatus, setSaveStatus ] = useState("");
     const [ timeSinceSave, setTimeSinceSave ] = useState(new Date(0));
+
+    // Refs to store the current function
+    const deleteSelectedElementRef = useRef<() => void>(() => {});
+    deleteSelectedElementRef.current = deleteSelectedElement;
 
     /**
      * Fetches the scrapbook from the database
@@ -106,7 +109,6 @@ export default function Scrapbook() {
             setSaveStatus(error);
         }
     }
-
 
     /**
      * Adds a new element to the scrapbook
@@ -236,13 +238,13 @@ export default function Scrapbook() {
 
                 // Prevent backspace from navigating back
                 e.preventDefault();
-                deleteSelectedElement();
+                deleteSelectedElementRef.current();
             }
         };
-    
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [deleteSelectedElement]);
+    }, []);
 
     if (scrapbookStatus === "success" && scrapbook) {
         return (

@@ -2,7 +2,7 @@
 import { useState, useContext, useRef } from "react";
 
 // Model imports
-import { Page, IScrapbook } from "@/lib/models";
+import { IScrapbook } from "@/lib/models";
 
 // Component imports
 import ScrapbookPage from "./ScrapbookPage";

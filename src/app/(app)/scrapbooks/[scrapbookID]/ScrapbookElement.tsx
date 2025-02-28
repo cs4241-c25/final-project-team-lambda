@@ -1,7 +1,8 @@
-import { Element } from "@/lib/models";
+import Image from "next/image";
 import { useContext } from "react";
-import ScrapbookContext from "./ScrapbookContext";
 
+import ScrapbookContext from "./ScrapbookContext";
+import { Element } from "@/lib/models";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
     const { setSelectedElement, selectedElement } = useContext(ScrapbookContext);
@@ -38,7 +39,10 @@ export default function ScrapbookElement({ el }: { el: Element }) {
             outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
             backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
         }}>
-            <img src={el.url} alt="Element" className="w-full h-full"/>
+            <Image 
+                src={el.url} alt="Element" className="w-full h-full"
+                width={el.size.x} height={el.size.y}
+            />
         </div>
     )
 
