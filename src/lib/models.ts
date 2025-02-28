@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true }
 });
 
-export let User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export interface IScrapbook {
     _id: string,
@@ -30,13 +30,13 @@ const scrapbookSchema = new mongoose.Schema({
     owner: { type: String, required: true },
     title: { type: String, required: true },
     visibility: { type: String, required: true },
-    likes: { type: Array<String> },
+    likes: { type: Array<string> },
     width: { type: Number, required: true },
     height: { type: Number, required: true },
     pages: { type: Array<Page> }
 });
 
-export let Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
+export const Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
 
 export interface Page {
     number: number,

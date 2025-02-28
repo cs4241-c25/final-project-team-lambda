@@ -1,9 +1,8 @@
 "use client";
 
-// Library imports
 import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 import { useSession } from 'next-auth/react';
 
@@ -22,12 +21,17 @@ export default function Scrapbook() {
 
     // scrapbook state
     const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
-    const [ selectedElement, setSelectedElement ] = useState<any | null>(null);
+    const [ selectedElement, setSelectedElement ] = useState<Element | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
     // status messages
     const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
-    const [ saveStatus, setSaveStatus ] = useState("Saved");
+    const [ saveStatus, setSaveStatus ] = useState("");
+    const [ timeSinceSave, setTimeSinceSave ] = useState(new Date(0));
+
+    // Refs to store the current function
+    const deleteSelectedElementRef = useRef<() => void>(() => {});
+    deleteSelectedElementRef.current = deleteSelectedElement;
 
     /**
      * Fetches the scrapbook from the database
@@ -72,10 +76,26 @@ export default function Scrapbook() {
     }
 
     /**
-     * Saves the scrapbook by updating it in the database
+     * Attempts to save the scrapbook by updating it in the database
      * @param newScrapbook The new scrapbook to save
      */
     async function save(newScrapbook: IScrapbook) {
+        // determine if the scrapbook has changed
+        if (JSON.stringify(scrapbook) === JSON.stringify(newScrapbook)) return;
+
+        // determine if it has been long enough since last save
+        const now = new Date();
+        const timeSinceLastSave = now.getTime() - timeSinceSave.getTime();
+        if (timeSinceLastSave < 5000) {
+            // if it hasn't been long enough, just update the status
+            setSaveStatus("Unsaved changes");
+            return;
+        }
+
+        forceSave(newScrapbook);
+    }
+
+    async function forceSave(newScrapbook: IScrapbook) {
         // save the scrapbook
         setSaveStatus("Saving...");
         const saveResult = await fetch(`/api/scrapbooks/save`, {
@@ -88,12 +108,12 @@ export default function Scrapbook() {
 
         if (saveResult.ok) {
             setSaveStatus("Saved");
+            setTimeSinceSave(new Date());
         } else {
             const error = await saveResult.text() as string;
             setSaveStatus(error);
         }
     }
-
 
     /**
      * Adds a new element to the scrapbook
@@ -182,6 +202,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(element);
+        save(newScrapbook);
     }
 
     /**
@@ -212,6 +233,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(null);
+        save(newScrapbook);
     }
 
     useEffect(() => {
@@ -221,13 +243,13 @@ export default function Scrapbook() {
 
                 // Prevent backspace from navigating back
                 e.preventDefault();
-                deleteSelectedElement();
+                deleteSelectedElementRef.current();
             }
         };
-    
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [deleteSelectedElement]);
+    }, []);
 
     function Header() {
         return (
@@ -235,6 +257,9 @@ export default function Scrapbook() {
                 <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">{"<"}</Link>
                 <h1>{scrapbook?.title}</h1>
                 <p>{saveStatus}</p>
+                { saveStatus === "Unsaved changes" && scrapbook &&
+                    <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                }
                 { session?.user && 
                     <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
                 }

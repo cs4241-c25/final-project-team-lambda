@@ -1,5 +1,7 @@
-import React, { useEffect, useContext } from "react";
+import React, { useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
+
+import ValidatedNumberInput from "./ValidatedInput";
 
 export default function Toolbox() {
     const { selectedElement, updateSelectedElement, deleteSelectedElement } = useContext(ScrapbookContext);
@@ -8,7 +10,7 @@ export default function Toolbox() {
         <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex-shrink-0"></div>
     )
 
-    const handleUpdate = (key: string, value: any) => {
+    const handleUpdate = (key: string, value: unknown) => {
         updateSelectedElement({ ...selectedElement, [key]: value });
     };
 
@@ -21,17 +23,25 @@ export default function Toolbox() {
             {/* position */}
             <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Position:</label>
             <div className="flex gap-2">
-                <input
-                    type="number"
-                    value={selectedElement.position.x}
-                    onChange={(e) => handleUpdate("position", { ...selectedElement.position, x: parseInt(e.target.value) })}
-                    className="w-full border p-2 rounded" placeholder="X"
+                <ValidatedNumberInput 
+                    name="position-x"
+                    min={-10000}
+                    max={10000}
+                    step={1}
+                    defaultValue={selectedElement.position.x}
+                    update={(value) => handleUpdate("position",
+                        { ...selectedElement.position, x: value }
+                    )}
                 />
-                <input
-                    type="number"
-                    value={selectedElement.position.y}
-                    onChange={(e) => handleUpdate("position", { ...selectedElement.position, y: parseInt(e.target.value) })}
-                    className="w-full border p-2 rounded" placeholder="Y"
+                <ValidatedNumberInput 
+                    name="position-y"
+                    min={-10000}
+                    max={10000}
+                    step={1}
+                    defaultValue={selectedElement.position.y}
+                    update={(value) => handleUpdate("position",
+                        { ...selectedElement.position, y: value }
+                    )}
                 />
             </div>
 
@@ -40,29 +50,39 @@ export default function Toolbox() {
                 <div>
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
                     <div className="flex gap-2">
-                        <input
-                            type="number"
-                            value={selectedElement.size.x}
-                            onChange={(e) => handleUpdate("size", { ...selectedElement.size, x: parseInt(e.target.value) })}
-                            className="w-full border p-2 rounded" placeholder="Width"
+                        <ValidatedNumberInput
+                            name="size-x"
+                            min={1}
+                            max={10000}
+                            step={1}
+                            defaultValue={selectedElement.size.x}
+                            update={(value) => handleUpdate("size",
+                                { ...selectedElement.size, x: value }
+                            )}
                         />
-                        <input
-                            type="number"
-                            value={selectedElement.size.y}
-                            onChange={(e) => handleUpdate("size", { ...selectedElement.size, y: parseInt(e.target.value) })}
-                            className="w-full border p-2 rounded" placeholder="Height"
+                        <ValidatedNumberInput
+                            name="size-y"
+                            min={1}
+                            max={10000}
+                            step={1}
+                            defaultValue={selectedElement.size.y}
+                            update={(value) => handleUpdate("size",
+                                { ...selectedElement.size, y: value }
+                            )}
                         />
                     </div>
                 </div>
             )}
             {selectedElement.type === "circle" && (
                 <div>
-                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
-                    <input
-                        type="number"
-                        value={selectedElement.size}
-                        onChange={(e) => handleUpdate("size", parseInt(e.target.value))}
-                        className="w-full border p-2 rounded" placeholder="Diameter"
+                    <label htmlFor="size" className="block text-sm" style={{ fontFamily: 'Garogier' }}>Size:</label>
+                    <ValidatedNumberInput
+                        name="size"
+                        min={1}
+                        max={10000}
+                        step={1}
+                        defaultValue={selectedElement.size}
+                        update={(value) => handleUpdate("size", value)}
                     />
                 </div>
             )}
@@ -78,13 +98,14 @@ export default function Toolbox() {
                         className="w-full border p-2 rounded"
                         placeholder="Enter text..."
                     />
-                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Font Size:</label>
-                    <input
-                        type="number"
-                        value={selectedElement.font_size}
-                        onChange={(e) => handleUpdate("font_size", parseInt(e.target.value) || 1)}
-                        className="w-full border p-2 rounded"
-                        min="1"
+                    <label htmlFor="font-size" className="block text-sm" style={{ fontFamily: 'Garogier' }}>Font Size:</label>
+                    <ValidatedNumberInput
+                        name="font-size"
+                        min={1}
+                        max={1000}
+                        step={1}
+                        defaultValue={selectedElement.font_size}
+                        update={(value) => handleUpdate("font_size", value)}
                     />
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Font:</label>
                     <select
@@ -128,18 +149,17 @@ export default function Toolbox() {
 
             {/* rotation */}
             { selectedElement.type !== "circle" && (
-            <div>
-                <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Rotation:</label>
-                <input
-                    type="number"
-                    value={selectedElement.rotation}
-                    onChange={(e) => handleUpdate("rotation", parseInt(e.target.value) || 0)}
-                    className="w-full border p-2 rounded"
-                    min="0"
-                    max="360"
-                    step="1"
-                />
-            </div>
+                <div>
+                    <label htmlFor="rotation" className="block text-sm" style={{ fontFamily: 'Garogier' }}>Rotation:</label>
+                    <ValidatedNumberInput
+                        name="rotation"
+                        min={0}
+                        max={360}
+                        step={1}
+                        defaultValue={selectedElement.rotation}
+                        update={(value) => handleUpdate("rotation", value)}
+                    />
+                </div>
             )}
 
             <button
