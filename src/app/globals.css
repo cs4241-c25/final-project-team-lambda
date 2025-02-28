@@ -7,7 +7,8 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
-  --darkestgreen: #415141;
+  --darkestgreen: #252e25;
+  --darkergreen: #405240;
   --darkgreen: #6D886D;
   --mediumgreen: #7B997B;
   --lightgreen: #90B390;
@@ -20,6 +21,7 @@
   --darkpurple: #7B6B85;
   --mediumpurple: #8E7B99;
   --lightpurple: #AB94B9;
+  --mediumtext: 1.16rem;
 
 }
 

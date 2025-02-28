@@ -26,7 +26,7 @@ export default function AppLayout({
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
                         <a href="/" className="no-underline">
-                            <h2 className="text-black text-xl font-bold">LifeLog</h2>
+                            <h2 className="text-black text-2xl font-bold">LifeLog</h2>
                         </a>
                         <div className="ml-6 flex space-x-4">
                             {navigation.map((item) => (

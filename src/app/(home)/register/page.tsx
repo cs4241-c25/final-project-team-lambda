@@ -44,25 +44,66 @@ export default function Register() {
 
     return (
         <main>
-            <h1>Register</h1>
+            <div
+                className="bg-cover bg-center bg-fixed h-screen flex justify-center items-center"
+                style={{ backgroundImage: "url('https://picsum.photos/1920/1080')"}} // or scrapbook pages collage image
+            >
+            <div className="bg-white mx-4 p-8 rounded shadow-md w-full md:w-1/2 lg:w-1/3">
+                <h1 className="text-5xl font-bold mb-2 text-center text-black">LifeLog</h1>
+
+                <h1 className="text-3xl font-bold mb-4 text-center text-[var(--darkergreen)]">Register</h1>
             <form action={register}>
-                <label htmlFor="username">Username:</label>
-                <input type="text" name="username" id="username" required minLength={3}
-                    onChange={(e) => { setUsername(e.target.value)}}/>
-                <label htmlFor="password">Password:</label>
-                <input type="password" name="password" id="password" required minLength={8}
-                    onChange={(e) => { setPassword(e.target.value)}}/>
-                <label htmlFor="confirm">Confirm Password:</label>
-                <input type="password" name="confirm" id="confirm"
-                    onChange={(e) => {
-                        e.target.setCustomValidity(
-                            (password !== e.target.value) ? "Passwords must match." : ""
-                        );
-                    }}
-                    required minLength={8} />
-                <button type="submit">Register</button>
+                <div className="mb-4">
+                    <label className="block font-semibold text-[var(--darkestgreen)] mb-2" htmlFor="username">Username:</label>
+                    <input
+                        className="border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="username"
+                        type="text"
+                        name="username"
+                        placeholder="Enter Username"
+                        required minLength={3}
+                        onChange={(e) => { setUsername(e.target.value)}}
+                    />
+                </div>
+                <div className="mb-4">
+                    <label className="block font-semibold text-[var(--darkestgreen)] mb-2" htmlFor="password">Password:</label>
+                    <input
+                        className="border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="password"
+                        type="password"
+                        name="password"
+                    placeholder= "Password"
+                        required minLength={8}
+                        onChange={(e) => { setPassword(e.target.value)}}/>
+                </div>
+                <div className="mb-4">
+                    <label className="block font-semibold text-[var(--darkestgreen)] mb-2" htmlFor="confirm">Confirm Password:</label>
+                    <input
+                        className="border rounded w-full py-3 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                        id="confirm"
+                        type="password"
+                        name="confirm"
+                        placeholder="Confirm Password"
+                            onChange={(e) => {
+                            e.target.setCustomValidity((password !== e.target.value) ? "Passwords must match." : "");
+                            }}
+                            required minLength={8}
+                    />
+                </div>
+                <div className="flex items-center mb-4">
+                    <button
+                        className="bg-[var(--darkgreen)] hover:bg-[var(--darkergreen)] text-white font-bold py-2 px-4 rounded focus:outline-non focus:shadow-outline"
+                        type="submit">
+                        Register
+                    </button>
+                    <a href="login" className="underline ml-auto">
+                        <h2 className="text-[var(--darkergreen)] font-semibold" style={{ fontSize: 'var(--mediumtext)'}}>Already have an account? Log in here</h2>
+                    </a>
+                </div>
                 <p>{registerStatus}</p>
             </form>
+            </div>
+            </div>
         </main>
     );
 }
