@@ -3,16 +3,20 @@ import mongoose from "mongoose";
 export interface IUser {
     _id: string
     username: string
+    name: string
+    email: string
     password: string
 };
 
 const userSchema = new mongoose.Schema({
     _id: String,
     username: { type: String, required: true },
+    name: { type: String, required: true },
+    email: { type: String, required: false },
     password: { type: String, required: true }
 });
 
-export let User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export interface IScrapbook {
     _id: string,
@@ -30,7 +34,7 @@ const scrapbookSchema = new mongoose.Schema({
     pages: { type: Array<Page> }
 });
 
-export let Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
+export const Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
 
 export interface Page {
     number: number,

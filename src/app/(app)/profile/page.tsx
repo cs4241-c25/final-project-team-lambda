@@ -6,33 +6,52 @@ import {useSession} from "next-auth/react";
 export default function Profile() {
     const {data: session} = useSession();
 
-    const [isChecked, setIsChecked] = useState(false);
+    const [isCheckedName, setIsCheckedName] = useState(false);
+    const [isCheckedEmail, setIsCheckedEmail] = useState(false);
+    const [isReadOnly, setIsReadOnly] = useState(true);
+    const [isReadOnlyEmail, setIsReadOnlyEmail] = useState(true);
 
     if (!(session?.user)) return null;
 
-    console.log(session.user.name);
+    //console.log(session.user.name);
 
-    const handCheckboxChange = (event: ChangeEvent<HTMLInputElement>) => {
-        setIsChecked(event.target.checked);
+    const handCheckboxChangeName = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsCheckedName(event.target.checked);
         if (event.target.checked) {
-            console.log("Checked");
+            setIsReadOnly(false)
         } else {
-            console.log("Unchecked")
+            setIsReadOnly(true)
+        }
+    }
+
+    const handCheckboxChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
+        setIsCheckedEmail(event.target.checked);
+        if (event.target.checked) {
+            setIsReadOnlyEmail(false)
+        } else {
+            setIsReadOnlyEmail(true)
         }
     }
 
     return (
         <main>
-            <h1>Profile</h1>
             <h2>Image: </h2>
             <form>
 
-                <label htmlFor="name" >Name: </label>
-                <input type="text" id="name" name={"name"} defaultValue={session.user.name}/>
-                <input type={"checkbox"} checked={isChecked} onChange={handCheckboxChange}/>
+                <h1>Profile Information</h1>
 
-                <h2>Name: { session.user.name }</h2>
-                <h2>Username:{ session.user.name } </h2>
+                <h2>Username:{session.user.name} </h2>
+
+                <label htmlFor="name">Name: </label>
+                <input type="text" readOnly={isReadOnly} id="name" name={"name"} defaultValue={session.user.name}/>
+                <input type={"checkbox"} checked={isCheckedName} onChange={handCheckboxChangeName}/>
+
+                <br/>
+
+                <label htmlFor={"email"}>Email: </label>
+                <input type={"text"} readOnly={isReadOnlyEmail} id={"email"} name={"email"}/>
+                <input type={"checkbox"} checked={isCheckedEmail} onChange={handCheckboxChangeEmail}/>
+
 
             </form>
         </main>
