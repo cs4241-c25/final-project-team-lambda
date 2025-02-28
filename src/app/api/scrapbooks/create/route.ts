@@ -23,6 +23,7 @@ export async function POST(req: Request) {
 
         return NextResponse.json({ _id: result.data._id }, { status: 201 });
     } catch (error) {
+        console.error("Error creating scrapbook: ", error);
         return NextResponse.json({ error: "Error creating scrapbook" }, { status: 500 });
     }
 }

@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
-import { User, IUser, Scrapbook, IScrapbook, Page } from './models';
+import { User, IUser, Scrapbook, IScrapbook } from './models';
 
 const DB_URI = process.env.DB_URI;
 const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .env.local';

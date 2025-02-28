@@ -1,8 +1,7 @@
 "use client";
 
-// Library imports
 import { useParams } from 'next/navigation';
-import { useEffect, useState} from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 
 // Model imports
@@ -18,12 +17,17 @@ export default function Scrapbook() {
 
     // scrapbook state
     const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
-    const [ selectedElement, setSelectedElement ] = useState<any | null>(null);
+    const [ selectedElement, setSelectedElement ] = useState<Element | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
     // status messages
     const [ scrapbookStatus, setScrapbookStatus ] = useState("loading");
-    const [ saveStatus, setSaveStatus ] = useState("Saved");
+    const [ saveStatus, setSaveStatus ] = useState("");
+    const [ timeSinceSave, setTimeSinceSave ] = useState(new Date(0));
+
+    // Refs to store the current function
+    const deleteSelectedElementRef = useRef<() => void>(() => {});
+    deleteSelectedElementRef.current = deleteSelectedElement;
 
     /**
      * Fetches the scrapbook from the database
@@ -35,11 +39,11 @@ export default function Scrapbook() {
             if (res.ok) {
                 const data = await res.json() as IScrapbook;
                 setScrapbook(data);
+                setScrapbookStatus("success");
             } else {
                 const error = await res.text() as string;
                 setScrapbookStatus(error);
             }
-            setScrapbookStatus("success");
         }
         fetchScrapbook();
     }, [scrapbookID]);
@@ -67,10 +71,26 @@ export default function Scrapbook() {
     }
 
     /**
-     * Saves the scrapbook by updating it in the database
+     * Attempts to save the scrapbook by updating it in the database
      * @param newScrapbook The new scrapbook to save
      */
     async function save(newScrapbook: IScrapbook) {
+        // determine if the scrapbook has changed
+        if (JSON.stringify(scrapbook) === JSON.stringify(newScrapbook)) return;
+
+        // determine if it has been long enough since last save
+        const now = new Date();
+        const timeSinceLastSave = now.getTime() - timeSinceSave.getTime();
+        if (timeSinceLastSave < 5000) {
+            // if it hasn't been long enough, just update the status
+            setSaveStatus("Unsaved changes");
+            return;
+        }
+
+        forceSave(newScrapbook);
+    }
+
+    async function forceSave(newScrapbook: IScrapbook) {
         // save the scrapbook
         setSaveStatus("Saving...");
         const saveResult = await fetch(`/api/scrapbooks/save`, {
@@ -83,12 +103,12 @@ export default function Scrapbook() {
 
         if (saveResult.ok) {
             setSaveStatus("Saved");
+            setTimeSinceSave(new Date());
         } else {
             const error = await saveResult.text() as string;
             setSaveStatus(error);
         }
     }
-
 
     /**
      * Adds a new element to the scrapbook
@@ -177,6 +197,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(element);
+        save(newScrapbook);
     }
 
     /**
@@ -207,6 +228,7 @@ export default function Scrapbook() {
         // update the scrapbook state
         setScrapbook(newScrapbook);
         setSelectedElement(null);
+        save(newScrapbook);
     }
 
     useEffect(() => {
@@ -216,13 +238,13 @@ export default function Scrapbook() {
 
                 // Prevent backspace from navigating back
                 e.preventDefault();
-                deleteSelectedElement();
+                deleteSelectedElementRef.current();
             }
         };
-    
+
         window.addEventListener('keydown', handleKeyDown);
         return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [deleteSelectedElement]);
+    }, []);
 
     if (scrapbookStatus === "success" && scrapbook) {
         return (
@@ -230,6 +252,9 @@ export default function Scrapbook() {
                 <header className="flex items-center gap-4 px-4">
                     <h1>{scrapbook.title}</h1>
                     <p>{saveStatus}</p>
+                    { saveStatus === "Unsaved changes" &&
+                        <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                    }
                 </header>
                 <main className="flex flex-1 min-h-0">
                     <ScrapbookContext.Provider value={{
