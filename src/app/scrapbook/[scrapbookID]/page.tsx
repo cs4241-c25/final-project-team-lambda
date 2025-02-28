@@ -16,11 +16,23 @@ import ScrapbookContext from './ScrapbookContext';
 
 export default function Scrapbook() {
     const router = useRouter();
-    const { data: session, status } = useSession()
+    const { data: session } = useSession()
     const { scrapbookID } = useParams<{ scrapbookID: string }>();
 
     // scrapbook state
-    const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
+    const [ scrapbook, setScrapbook ] = useState<IScrapbook>({
+        _id: "",
+        visibility: "private",
+        title: "Loading...",
+        owner: "",
+        pages: [{
+            number: 1,
+            elements: []
+        }],
+        likes: [],
+        width: 816,
+        height: 1056
+    });
     const [ selectedElement, setSelectedElement ] = useState<Element | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
@@ -51,7 +63,7 @@ export default function Scrapbook() {
             }
         }
         fetchScrapbook();
-    }, [scrapbookID]);
+    }, [scrapbookID, router]);
 
     /**
      * Appends a new page to the scrapbook and saves it
@@ -255,9 +267,9 @@ export default function Scrapbook() {
         return (
             <header className="flex items-center gap-4 px-4 py-2">
                 <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">{"<"}</Link>
-                <h1>{scrapbook?.title}</h1>
+                <h1>{scrapbook.title}</h1>
                 <p>{saveStatus}</p>
-                { saveStatus === "Unsaved changes" && scrapbook &&
+                { saveStatus === "Unsaved changes" &&
                     <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
                 { session?.user && 
@@ -267,7 +279,7 @@ export default function Scrapbook() {
         );
     }
 
-    if (scrapbookStatus === "success" && scrapbook) {
+    if (scrapbookStatus !== "error") {
         return (
             <body className="flex flex-col h-screen">
                 <Header />
@@ -281,13 +293,6 @@ export default function Scrapbook() {
                         <PageNavigator scrapbook={scrapbook} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
                 </main>
-            </body>
-        );
-    } else if (scrapbookStatus === "loading") {
-        return (
-            <body>
-                <Header />
-                <div>Loading...</div>
             </body>
         );
     } else {
