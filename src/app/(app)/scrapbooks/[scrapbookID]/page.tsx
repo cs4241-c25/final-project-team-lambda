@@ -134,9 +134,9 @@ export default function Scrapbook() {
             element = {
                 type: "image",
                 position: { x: 200, y: 200 },
-                size: { x: 150, y: 150 },
+                size: { x: 360, y: 360 },
                 rotation: 0,
-                url: `https://picsum.photos/seed/${randomSeed}/150`,
+                url: `https://t4.ftcdn.net/jpg/02/17/88/73/360_F_217887350_mDfLv2ootQNeffWXT57VQr8OX7IvZKvB.jpg`,
             }
         } else if (type === "rectangle") {
             element = {
@@ -197,8 +197,9 @@ export default function Scrapbook() {
         console.log("Updating element in state:", element);
 
         // update the scrapbook state
+        setScrapbook(newScrapbook);
+        setSelectedElement(element);
         save(newScrapbook);
-        setSelectedElement({ ...element });
     }
 
     /**
