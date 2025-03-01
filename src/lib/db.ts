@@ -220,3 +220,7 @@ export async function saveScrapbook(scrapbook: IScrapbook, owner: string): Promi
         return { ok: false, code: 500, error: "Error updating scrapbook" };
     }
 }
+
+export async function getStickers(): Promise<DBResult<ISticker>> {
+    await connect();
+}

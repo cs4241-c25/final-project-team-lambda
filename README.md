@@ -217,3 +217,19 @@ The `Element` model stores information for a single element in the scrapbook. Th
 - A circle, with a position, size (radius), and color
 
 Each element type has a `type` parameter used to differentiate them when processing.
+
+`Sticker`
+---
+```typescript
+
+interface ISticker {
+    url: string, 
+    width: number,
+    height: number,
+}
+```
+
+The `Sticker` model stores information for a single sticker available for users to import into their scrapbook. It includes:
+- The imagekit `URL` referencing the sticker
+- The image `width` in pixels
+- the image `height` in pixels

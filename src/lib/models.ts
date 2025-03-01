@@ -14,6 +14,20 @@ const userSchema = new mongoose.Schema({
 
 export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
+export interface ISticker {
+    url: string
+    width: number
+    height: number
+};
+
+const stickerSchema = new mongoose.Schema({
+    url: { type: String, required: true },
+    width: { type: Number, required: true },
+    height: { type: Number, required: true }
+});
+
+export const Sticker = mongoose.models.Sticker || mongoose.model<ISticker>("Sticker", stickerSchema);
+
 export interface IScrapbook {
     _id: string,
     owner: string, // user id

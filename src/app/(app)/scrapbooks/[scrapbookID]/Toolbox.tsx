@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
 import ImageUpload from "./ImageUpload";
+import Stickers from "./Stickers";
 
 import ValidatedNumberInput from "./ValidatedInput";
 
