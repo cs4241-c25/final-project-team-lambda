@@ -15,6 +15,7 @@ const userSchema = new mongoose.Schema({
 export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export interface ISticker {
+    _id?: string;
     url: string
     width: number
     height: number

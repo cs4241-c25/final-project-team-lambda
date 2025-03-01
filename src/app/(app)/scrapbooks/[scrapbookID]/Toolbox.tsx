@@ -174,6 +174,15 @@ export default function Toolbox() {
             }}>
                 Delete
             </button>
+            <Stickers
+                onSelect={(url, width, height) => {
+                    updateSelectedElement({
+                        ...selectedElement,
+                        url,
+                        size: { x: width, y: height }
+                    });
+                }}
+            />
         </div>
     );
 };
