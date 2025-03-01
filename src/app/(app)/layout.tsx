@@ -1,5 +1,5 @@
-import Logout from "./Logout";
 import Link from "next/link";
+import Logout from "./Logout";
 
 const navigation = [
     { name: 'Scrapbooks', href: '/scrapbooks' },

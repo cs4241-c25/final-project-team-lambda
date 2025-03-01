@@ -4,12 +4,10 @@ import CreateScrapbook from "./CreateScrapbook";
 import Link from "next/link";
 
 export default async function Scrapbooks() {
-    // get session and send request for scrapbooks
     const session = await getSession();
     const getScrapbooksResult = await getScrapbooks(session?.user.id);
 
     if (!getScrapbooksResult.ok) {
-        // if there was an error getting scrapbooks, display an error message
         return (
             <main className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
                 <h1 className="text-3xl font-bold text-[black] mb-6">Scrapbooks</h1>

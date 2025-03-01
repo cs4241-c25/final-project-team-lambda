@@ -179,7 +179,7 @@ interface Image {
         x: number,
         y: number
     },
-    scale: {
+    size: {
         x: number,
         y: number
     },
@@ -200,7 +200,7 @@ interface Text {
     content: string,
     font_size: number,
     color: string,
-    rotation: string,
+    rotation: number,
     font: string
 }
 
@@ -214,7 +214,7 @@ interface Rectangle {
         x: number,
         y: number,
     },
-    rotation: string,
+    rotation: number,
     color: string
 }
 

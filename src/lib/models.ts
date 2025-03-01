@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     password: { type: String, required: true }
 });
 
-export let User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
+export const User = mongoose.models.User || mongoose.model<IUser>("User", userSchema);
 
 export interface IScrapbook {
     _id: string,
@@ -20,17 +20,23 @@ export interface IScrapbook {
     title: string,
     visibility: "public" | "private",
     pages: Page[],
-    likes: string[]
+    likes: string[],
+    width: number,
+    height: number,
 }
 
 const scrapbookSchema = new mongoose.Schema({
     _id: String,
     owner: { type: String, required: true },
     title: { type: String, required: true },
+    visibility: { type: String, required: true },
+    likes: { type: Array<string> },
+    width: { type: Number, required: true },
+    height: { type: Number, required: true },
     pages: { type: Array<Page> }
 });
 
-export let Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
+export const Scrapbook = mongoose.models.Scrapbook || mongoose.model<IScrapbook>("Scrapbook", scrapbookSchema);
 
 export interface Page {
     number: number,
@@ -45,10 +51,10 @@ interface Image {
         x: number,
         y: number
     },
-    scale: {
+    size: {
         x: number,
         y: number
-    },
+    }
     rotation: number,
     url: string
 }
@@ -66,7 +72,7 @@ interface Text {
     content: string,
     font_size: number,
     color: string,
-    rotation: string,
+    rotation: number,
     font: string
 }
 
@@ -80,7 +86,7 @@ interface Rectangle {
         x: number,
         y: number,
     },
-    rotation: string,
+    rotation: number,
     color: string
 }
 

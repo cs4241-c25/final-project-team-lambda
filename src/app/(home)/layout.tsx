@@ -2,6 +2,7 @@ const navigation = [
     { name: 'Log In', href: '/login' },
     { name: 'Register', href: '/register' },
 ];
+import Link from "next/link";
 
 export default function HomeLayout({
                                        children,
@@ -10,6 +11,7 @@ export default function HomeLayout({
 }>) {
     return (
         <body>
+        //TODO Change Link!!!
         <nav className="bg-[var(--mediumgreen)]">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
