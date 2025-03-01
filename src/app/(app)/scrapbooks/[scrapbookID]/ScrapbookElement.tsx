@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import { useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
@@ -6,6 +7,8 @@ import { Element } from "@/lib/models";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
     const { updateSelectedElement, setSelectedElement, selectedElement } = useContext(ScrapbookContext);
+    const [hasResized, setHasResized] = useState(false);
+
     return (
         <DragResize
             element={el}
@@ -36,8 +39,8 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                     alt="Scrapbook Image"
                     draggable={false}
                     style={{
-                        width: "100%",
-                        height: "100%",
+                        width: el.size.x,
+                        height:  el.size.y,
                         objectFit: "fill",
                     }}
                 />

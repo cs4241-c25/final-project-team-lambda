@@ -42,22 +42,24 @@ export default function Stickers({ onSelect }: StickersProps) {
     return (
         <div className="mt-4">
             <h4 className="text-sm font-semibold">Preset Stickers</h4>
-            <div className="flex flex-wrap gap-2 mt-2">
-                {stickers.map((sticker, index) => (
-                    <button
-                        key={index}
-                        onClick={() => onSelect(sticker.url, sticker.width, sticker.height)}
-                        className="border p-1 rounded hover:shadow-lg transition"
-                    >
-                        <img
-                            src={sticker.url}
-                            alt={`Sticker ${index + 1}`}
-                            width={sticker.width / 4}
-                            height={sticker.height / 4}
-                            className="object-contain"
-                        />
-                    </button>
-                ))}
+            <div className="max-h-32 overflow-y-auto border border-gray-300 rounded-md p-2">
+                <div className="grid grid-cols-3 gap-2">
+                    {stickers.map((sticker, index) => (
+                        <button
+                            key={index}
+                            onClick={() => onSelect(sticker.url, sticker.width, sticker.height)}
+                            className="border p-1 rounded hover:shadow-lg transition"
+                        >
+                            <img
+                                src={sticker.url}
+                                alt={`Sticker ${index + 1}`}
+                                width={sticker.width / 4}
+                                height={sticker.height / 4}
+                                className="object-contain"
+                            />
+                        </button>
+                    ))}
+                </div>
             </div>
         </div>
     );
