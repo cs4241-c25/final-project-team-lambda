@@ -47,7 +47,6 @@ async function connect() {
 type LoginResult = DBResult<{
     username: string,
     profName: string,
-    email: string,
     id: string
 }>;
 
@@ -82,7 +81,6 @@ export async function login(username: string, password: string): Promise<LoginRe
         data: {
             username: user.username,
             profName: user.username,
-            email: "",
             id: user._id
         }
     };
@@ -118,7 +116,7 @@ export async function register(username: string, password: string): Promise<Logi
         _id: id,
         username,
         profName: profName,
-        email: "",
+        email,
         password: hashedPassword
     });
     await newUser.save();
