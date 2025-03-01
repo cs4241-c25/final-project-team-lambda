@@ -174,9 +174,11 @@ export default function Scrapbook() {
             draft.pages[pageIndex].elements[elementIndex] = element;
         });
 
+        console.log("Updating element in state:", element);
+
         // update the scrapbook state
         setScrapbook(newScrapbook);
-        setSelectedElement(element);
+        setSelectedElement({ ...element });
     }
 
     /**

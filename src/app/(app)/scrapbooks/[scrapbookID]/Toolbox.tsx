@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
+import ImageUpload from "./ImageUpload";
 
 export default function Toolbox() {
     const { selectedElement, updateSelectedElement, deleteSelectedElement } = useContext(ScrapbookContext);
@@ -103,12 +104,15 @@ export default function Toolbox() {
             {/* image properties */}
             {selectedElement.type === "image" && (
                 <>
-                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>URL:</label>
-                    <input
-                        type="text"
-                        value={selectedElement.url}
-                        onChange={(e) => handleUpdate("url", e.target.value)}
-                        className="w-full border p-2 rounded"
+                    <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Upload Image:</label>
+                    <ImageUpload
+                        onUpload={(url, width, height, fileId) => {
+                            updateSelectedElement({
+                                ...selectedElement,
+                                url,
+                                size: { x: width, y: height }
+                            });
+                        }}
                     />
                 </>
             )}
