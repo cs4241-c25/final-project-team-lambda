@@ -2,7 +2,7 @@ import Image from "next/image";
 import { useContext, useState, useRef } from "react";
 import { Element } from "@/lib/models";
 import ScrapbookContext from "./ScrapbookContext";
-import TransformControls from "./TransformControls";
+import RotateControls from "./RotateControls";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
     const { setSelectedElement, selectedElement, updateSelectedElement } = useContext(ScrapbookContext);
@@ -31,7 +31,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
                 backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
             }}>
-            {el === selectedElement && <TransformControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
+            {el === selectedElement && <RotateControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
             <p style={{ fontSize: element.font_size, color: element.color, fontFamily: element.font }}>
                 {element.content}
             </p>
@@ -52,7 +52,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
                 backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
             }}>
-            {el === selectedElement && <TransformControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
+            {el === selectedElement && <RotateControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
             <Image
                 src={element.url} alt="Element" className="w-full h-full"
                 width={element.size.x} height={element.size.y}
@@ -74,7 +74,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
                 backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
             }}>
-            {el === selectedElement && <TransformControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
+            {el === selectedElement && <RotateControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref}/>}
             <div className="w-full h-full" style={{ backgroundColor: element.color }}></div>
         </div>
     );
@@ -92,7 +92,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
                 backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
             }}>
-            {el === selectedElement && <TransformControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref} />}
+            {el === selectedElement && <RotateControls element={element} onChange={handleChange} onUpdate={handleUpdate} ref={ref} />}
             <div className="w-full h-full rounded-[50%]" style={{ backgroundColor: element.color }}></div>
         </div>
     );

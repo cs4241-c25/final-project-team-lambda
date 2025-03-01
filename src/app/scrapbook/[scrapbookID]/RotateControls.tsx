@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { Element } from "@/lib/models";
 
 interface TransformControlsProps {
@@ -8,12 +8,12 @@ interface TransformControlsProps {
     ref: React.RefObject<HTMLDivElement | null>;
 }
 
-export default function TransformControls({ element, onChange, onUpdate, ref }: TransformControlsProps) {
-    const [isTransforming, setIsTransforming] = useState(false);
+export default function RotateControls({ element, onChange, onUpdate, ref }: TransformControlsProps) {
+    const [isRotating, setIsRotating] = useState(false);
 
     useEffect(() => {
         const handleMouseMove = (e: MouseEvent) => {
-            if (!isTransforming) return;
+            if (!isRotating) return;
 
             const rect = ref.current?.getBoundingClientRect();
             if (!rect) return;
@@ -34,8 +34,8 @@ export default function TransformControls({ element, onChange, onUpdate, ref }: 
         };
 
         const handleMouseUp = () => {
-            if (!isTransforming) return;
-            setIsTransforming(false);
+            if (!isRotating) return;
+            setIsRotating(false);
             onUpdate(element); // Final update on mouse release
         };
 
@@ -46,14 +46,14 @@ export default function TransformControls({ element, onChange, onUpdate, ref }: 
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [isTransforming, onChange, onUpdate]);
+    }, [isRotating, onChange, onUpdate]);
 
     return (
         <div className="absolute bottom-full flex flex-col items-center">
             <button
                 aria-label="Rotate Element"
                 className="w-2 h-2 rounded-full bg-gray-200 border-2 border-red-600"
-                onMouseDown={() => setIsTransforming(true)}
+                onMouseDown={() => setIsRotating(true)}
             ></button>
             <div className="w-0.5 h-3 bg-red-600"></div>
         </div>
