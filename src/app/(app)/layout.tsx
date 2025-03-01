@@ -1,4 +1,5 @@
 import Logout from "./Logout";
+import Link from "next/link";
 
 const navigation = [
     { name: 'Scrapbooks', href: '/scrapbooks' },
@@ -25,12 +26,12 @@ export default function AppLayout({
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div className="flex h-16 items-center justify-between">
                     <div className="flex items-center">
-                        <a href="/" className="no-underline">
+                        <Link href="/" className="no-underline">
                             <h2 className="text-black text-2xl font-bold">LifeLog</h2>
-                        </a>
+                        </Link>
                         <div className="ml-6 flex space-x-4">
                             {navigation.map((item) => (
-                                <a
+                                <Link
                                     key={item.name}
                                     href={item.href}
                                     aria-current={currentPath === item.href ? 'page' : undefined}
@@ -42,7 +43,7 @@ export default function AppLayout({
                                     )}
                                 >
                                     {item.name}
-                                </a>
+                                </Link>
                             ))}
                         </div>
                     </div>

@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function Login() {
     const router = useRouter();
@@ -69,9 +70,9 @@ export default function Login() {
                         >
                         Log In
                     </button>
-                    <a href="/register" className="underline ml-auto">
+                    <Link href="/register" className="underline ml-auto">
                         <h2 className="text-[var(--darkergreen)] text-lg font-bold">No Account? Register Here</h2>
-                    </a>
+                    </Link>
                 </div>
                 <p>{loginStatus}</p>
             </form>

@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { getScrapbooks } from "@/lib/db";
 import CreateScrapbook from "./CreateScrapbook";
+import Link from "next/link";
 
 export default async function Scrapbooks() {
     // get session and send request for scrapbooks
@@ -13,7 +14,7 @@ export default async function Scrapbooks() {
             <main className="max-w-4xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-10">
                 <h1 className="text-3xl font-bold text-[black] mb-6">Scrapbooks</h1>
                 <p>Error getting scrapbooks.</p>
-                <a href="/scrapbooks">Try again</a>
+                <Link href="/scrapbooks">Try again</Link>
             </main>
         )
     } else {
@@ -27,9 +28,9 @@ export default async function Scrapbooks() {
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {scrapbooks.map(scrapbook => (
                         <li key={scrapbook._id} className="bg-[var(--lightgreen)] p-4 rounded-lg shadow hover:bg-[var(--lightgreen)] transition">
-                            <a href={`/scrapbooks/${scrapbook._id}`} className="text-xl font-semibold text-[var(--darkestgreen)] hover:text-[black]">
+                            <Link href={`/scrapbooks/${scrapbook._id}`} className="text-xl font-semibold text-[var(--darkestgreen)] hover:text-[black]">
                                 {scrapbook.title}
-                            </a>
+                            </Link>
                         </li>
                     ))}
                 </ul>

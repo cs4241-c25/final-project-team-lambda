@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function Register() {
     const router = useRouter();
@@ -96,9 +97,9 @@ export default function Register() {
                         type="submit">
                         Register
                     </button>
-                    <a href="login" className="underline ml-auto">
+                    <Link href="login" className="underline ml-auto">
                         <h2 className="text-[var(--darkergreen)] font-semibold" style={{ fontSize: 'var(--mediumtext)'}}>Already have an account? Log in here</h2>
-                    </a>
+                    </Link>
                 </div>
                 <p>{registerStatus}</p>
             </form>
