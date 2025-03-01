@@ -46,7 +46,7 @@ async function connect() {
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
     username: string,
-    name: string,
+    profName: string,
     email: string,
     id: string
 }>;
@@ -81,7 +81,7 @@ export async function login(username: string, password: string): Promise<LoginRe
         code: 200,
         data: {
             username: user.username,
-            name: user.username,
+            profName: user.username,
             email: "",
             id: user._id
         }
@@ -110,11 +110,15 @@ export async function register(username: string, password: string): Promise<Logi
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const id = uuid();
+    const email = "";
+    const profName = username
 
     // insert user into database
     const newUser = new User({
         _id: id,
         username,
+        profName: profName,
+        email: "",
         password: hashedPassword
     });
     await newUser.save();
@@ -122,7 +126,7 @@ export async function register(username: string, password: string): Promise<Logi
     return {
         ok: true,
         code: 201,
-        data: { name: username, id }
+        data: { name: username, profName, id }
     }
 }
 
