@@ -54,6 +54,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                         src={el.url}
                         alt="Scrapbook Image"
                         className="w-full h-full object-cover"
+                        style={{ objectFit: "fill" }}
                         onError={(e) => {
                             console.error("Image failed to load:", el.url);
                             e.currentTarget.style.display = 'none';
