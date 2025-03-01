@@ -1,81 +1,62 @@
 import Image from "next/image";
 import { useContext } from "react";
-
 import ScrapbookContext from "./ScrapbookContext";
+import DragResize from "./DragResize";
 import { Element } from "@/lib/models";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
-    const { setSelectedElement, selectedElement } = useContext(ScrapbookContext);
+    const { updateSelectedElement, setSelectedElement, selectedElement } = useContext(ScrapbookContext);
+    return (
+        <DragResize
+            element={el}
+            onUpdate={updateSelectedElement}
+            onSelect={setSelectedElement}
+            isSelected={selectedElement?.id === el.id}
+        >
+            {el.type === "text" && (
+                <p
+                    style={{
+                        fontSize: el.font_size,
+                        color: el.color,
+                        fontFamily: el.font,
+                        width: "100%",
+                        height: "100%",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                    }}
+                >
+                    {el.content}
+                </p>
+            )}
 
-    if (el.type === "text") return (
-        <div
-        className="absolute flex items-center justify-center overflow-hidden cursor-pointer"
-        onClick={() => setSelectedElement(el)}
-        style={{
-            top: el.position.y,
-            left: el.position.x,
-            transform: `rotate(${el.rotation}deg)`,
-            width: el.size.x,
-            height: el.size.y,
-            outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
-            backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
-        }}>
-            <p style={{ fontSize: el.font_size, color: el.color, fontFamily: el.font }}>
-                {el.content}
-            </p>
-        </div>
-    )
+            {el.type === "image" && (
+                <img
+                    src={el.url}
+                    alt="Scrapbook Image"
+                    draggable={false}
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        objectFit: "fill",
+                    }}
+                />
+            )}
 
-    if (el.type === "image") return (
-        <div
-        className="absolute flex items-center justify-center overflow-hidden cursor-pointer"
-        onClick={() => setSelectedElement(el)}
-        style={{
-            top: el.position.y,
-            left: el.position.x,
-            transform: `rotate(${el.rotation}deg)`,
-            width: el.size.x,
-            height: el.size.y,
-            outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
-            backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
-        }}>
-            <Image 
-                src={el.url} alt="Element" className="w-full h-full"
-                width={el.size.x} height={el.size.y}
-            />
-        </div>
-    )
+            {el.type === "rectangle" && (
+                <div style={{ width: "100%", height: "100%", backgroundColor: el.color }} />
+            )}
 
-    if (el.type === "rectangle") return (
-        <div
-        className="absolute flex items-center justify-center overflow-hidden cursor-pointer"
-        onClick={() => setSelectedElement(el)}
-        style={{
-            top: el.position.y,
-            left: el.position.x,
-            transform: `rotate(${el.rotation}deg)`,
-            width: el.size.x,
-            height: el.size.y,
-            outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
-            backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
-        }}>
-            <div className="w-full h-full" style={{ backgroundColor: el.color }}></div>
-        </div>
-    )
-
-    if (el.type === "circle") return (
-        <div
-        className="absolute flex items-center justify-center overflow-hidden cursor-pointer"
-        onClick={() => setSelectedElement(el)}
-        style={{
-            top: el.position.y,
-            left: el.position.x,
-            width: el.size,
-            height: el.size,
-            outline: el === selectedElement ? "2px solid #FF0000" : "2px dashed transparent",
-            backgroundColor: el === selectedElement ? "rgba(255, 0, 0, 0.1)" : "transparent",
-        }}>
-            <div className="w-full h-full rounded-[50%]" style={{ backgroundColor: el.color }}></div>
-        </div>
-    )
+            {el.type === "circle" && (
+                <div
+                    style={{
+                        width: "100%",
+                        height: "100%",
+                        backgroundColor: el.color,
+                        borderRadius: "50%",
+                    }}
+                />
+            )}
+        </DragResize>
+    );
 }
