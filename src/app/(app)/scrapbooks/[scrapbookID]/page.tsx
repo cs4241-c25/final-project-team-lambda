@@ -130,13 +130,12 @@ export default function Scrapbook() {
                 font: "Arial",
             }
         } else if (type === "image") {
-            const randomSeed = Math.floor(Math.random() * 200);
             element = {
                 type: "image",
                 position: { x: 200, y: 200 },
-                size: { x: 360, y: 360 },
+                size: { x: 200, y: 200 },
                 rotation: 0,
-                url: `https://t4.ftcdn.net/jpg/02/17/88/73/360_F_217887350_mDfLv2ootQNeffWXT57VQr8OX7IvZKvB.jpg`,
+                url: `https://ik.imagekit.io/charlotteroscoe/scrapbook-images/upload-file.svg?updatedAt=1740842982508`,
             }
         } else if (type === "rectangle") {
             element = {

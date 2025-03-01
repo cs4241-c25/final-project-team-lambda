@@ -34,6 +34,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 <img
                     src={el.url}
                     alt="Scrapbook Image"
+                    draggable={false}
                     style={{
                         width: "100%",
                         height: "100%",
