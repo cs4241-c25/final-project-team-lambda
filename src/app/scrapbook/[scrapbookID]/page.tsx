@@ -147,13 +147,12 @@ export default function Scrapbook() {
                 font: "Arial",
             }
         } else if (type === "image") {
-            const randomSeed = Math.floor(Math.random() * 200);
             element = {
                 type: "image",
                 position: { x: 200, y: 200 },
-                size: { x: 150, y: 150 },
+                size: { x: 200, y: 200 },
                 rotation: 0,
-                url: `https://picsum.photos/seed/${randomSeed}/150`,
+                url: `https://ik.imagekit.io/charlotteroscoe/scrapbook-images/upload-file.svg?updatedAt=1740842982508`,
             }
         } else if (type === "rectangle") {
             element = {
