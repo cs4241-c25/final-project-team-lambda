@@ -11,7 +11,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
             element={el}
             onUpdate={updateSelectedElement}
             onSelect={setSelectedElement}
-            isSelected={selectedElement?.id === el.id}
+            isSelected={selectedElement === el}
         >
             {el.type === "text" && (
                 <p
