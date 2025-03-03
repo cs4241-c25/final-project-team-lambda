@@ -110,11 +110,15 @@ export async function register(username: string, password: string): Promise<Logi
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const id = uuid();
+    const email = "";
+    const profName = username
 
     // insert user into database
     const newUser = new User({
         _id: id,
         username,
+        profName: profName,
+        email,
         password: hashedPassword
     });
     await newUser.save();
@@ -122,7 +126,7 @@ export async function register(username: string, password: string): Promise<Logi
     return {
         ok: true,
         code: 201,
-        data: { username, id, email: "", profName: "" }
+        data: { username, profName, email, id }
     }
 }
 
