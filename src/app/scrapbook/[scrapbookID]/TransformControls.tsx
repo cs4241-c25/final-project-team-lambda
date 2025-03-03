@@ -1,22 +1,22 @@
 import React, { useState, useEffect, useContext } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import ScrapbookContext from "./ScrapbookContext";
+import { Element } from "@/lib/models";
 
 interface TransformControlsProps {
-    element: any;
-    onUpdate: (updatedElement: any) => void;
-    isSelected: boolean;
+    el: Element
     children: React.ReactNode;
 }
 
-export default function TransformControls({
-    element,
-    onUpdate,
-    isSelected,
-    children,
-}: TransformControlsProps) {
+export default function TransformControls({ el, children }: TransformControlsProps) {
+    // local element state
+    const [element, setElement] = useState({ ...el, isLocked: false });
+    useEffect(() => setElement((prev) => ({ ...el, isLocked: prev.isLocked })), [el]);
+    console.log(el);
+
     // element manipulation context
-    const { setSelectedElement, updateSelectedElement } = useContext(ScrapbookContext);
+    const { selectedElement, setSelectedElement, updateSelectedElement } = useContext(ScrapbookContext);
+    const isSelected = el === selectedElement;
     
     // state to track dragging, resizing, and rotating
     const [dragging, setDragging] = useState(false);
@@ -33,8 +33,6 @@ export default function TransformControls({
             return { width: element.size.x, height: element.size.y };
         } else if (typeof element.size === "number") {
             return { width: element.size * 2, height: element.size * 2 };
-        } else if (element.scale) {
-            return { width: element.scale.x * 100, height: element.scale.y * 100 };
         }
         return { width: 100, height: 100 };
     };
@@ -47,7 +45,8 @@ export default function TransformControls({
         if (element.isLocked && isSelected) return;
         if ((e.target as HTMLElement).classList.contains("resize-handle")) return;
         e.stopPropagation();
-        setSelectedElement(element);
+
+        setSelectedElement(el);
         setDragging(true);
         setStartPos({
             mouseX: e.clientX,
@@ -65,32 +64,24 @@ export default function TransformControls({
         const deltaY = e.clientY - startPos.mouseY;
 
         if (dragging) {
-            onUpdate({
+            setElement({
                 ...element,
                 position: { x: startPos.elementX + deltaX, y: startPos.elementY + deltaY },
             });
         } else if (resizing) {
-            if (element.size && typeof element.size === "object") {
-                onUpdate({
+            if (element.type !== "circle") {
+                setElement({
                     ...element,
                     size: {
                         x: Math.max(20, startSize.width + deltaX),
                         y: Math.max(20, startSize.height + deltaY),
                     },
                 });
-            } else if (typeof element.size === "number") {
+            } else if (element.type == "circle") {
                 const newDiameter = Math.max(20, startSize.width + deltaX);
-                onUpdate({
+                setElement({
                     ...element,
                     size: newDiameter / 2,
-                });
-            } else if (element.scale) {
-                onUpdate({
-                    ...element,
-                    scale: {
-                        x: Math.max(0.1, startSize.width + deltaX) / 100,
-                        y: Math.max(0.1, startSize.height + deltaY) / 100,
-                    },
                 });
             }
         }
@@ -100,7 +91,10 @@ export default function TransformControls({
     const handleMouseUp = () => {
         if (dragging) setDragging(false);
         if (resizing) setResizing(false);
-        updateSelectedElement(element);
+
+        // update the element, removing the isLocked property
+        const { isLocked, ...newElement } = element;
+        updateSelectedElement(newElement);
     };
 
     useEffect(() => {
@@ -121,7 +115,8 @@ export default function TransformControls({
     const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (element.isLocked) return;
         e.stopPropagation();
-        setSelectedElement(element);
+
+        setSelectedElement(el);
         setResizing(true);
         setStartPos({
             mouseX: e.clientX,
@@ -135,8 +130,8 @@ export default function TransformControls({
     // function to lock/unlock element
     const toggleLock = (e: React.MouseEvent) => {
         e.stopPropagation();
-        setSelectedElement(element); // check element is selected before locking
-        onUpdate({ ...element, isLocked: !element.isLocked });
+        if (!isSelected) return;
+        setElement({ ...element, isLocked: !element.isLocked });
     };
 
     return (
@@ -146,7 +141,7 @@ export default function TransformControls({
                 position: "absolute",
                 top: element.position.y,
                 left: element.position.x,
-                transform: `rotate(${element.rotation}deg)`,
+                transform: ("rotation" in element) ? `rotate(${element.rotation}deg)` : "none",
                 width: dimensions.width,
                 height: dimensions.height,
                 border: isSelected ? "2px dashed #FF0000" : "2px dashed transparent",

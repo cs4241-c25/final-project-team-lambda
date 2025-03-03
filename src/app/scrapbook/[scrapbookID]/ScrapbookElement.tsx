@@ -1,26 +1,15 @@
-import { useContext, useState } from "react";
-import ScrapbookContext from "./ScrapbookContext";
 import TransformControls from "./TransformControls";
 import { Element } from "@/lib/models";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
-    const { selectedElement } = useContext(ScrapbookContext);
-
-    // local element state
-    const [element, setElement] = useState(el);
-
     return (
-        <TransformControls
-            element={element}
-            onUpdate={setElement}
-            isSelected={selectedElement === el}
-        >
-            {element.type === "text" && (
+        <TransformControls el={el} >
+            {el.type === "text" && (
                 <p
                     style={{
-                        fontSize: element.font_size,
-                        color: element.color,
-                        fontFamily: element.font,
+                        fontSize: el.font_size,
+                        color: el.color,
+                        fontFamily: el.font,
                         width: "100%",
                         height: "100%",
                         display: "flex",
@@ -28,13 +17,13 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                         justifyContent: "center",
                     }}
                 >
-                    {element.content}
+                    {el.content}
                 </p>
             )}
 
-            {element.type === "image" && (
+            {el.type === "image" && (
                 <img
-                    src={element.url}
+                    src={el.url}
                     alt="Scrapbook Image"
                     draggable={false}
                     style={{
@@ -45,16 +34,16 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 />
             )}
 
-            {element.type === "rectangle" && (
-                <div style={{ width: "100%", height: "100%", backgroundColor: element.color }} />
+            {el.type === "rectangle" && (
+                <div style={{ width: "100%", height: "100%", backgroundColor: el.color }} />
             )}
 
-            {element.type === "circle" && (
+            {el.type === "circle" && (
                 <div
                     style={{
                         width: "100%",
                         height: "100%",
-                        backgroundColor: element.color,
+                        backgroundColor: el.color,
                         borderRadius: "50%",
                     }}
                 />
