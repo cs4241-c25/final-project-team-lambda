@@ -36,13 +36,13 @@ export default function CreateScrapbookPage() {
 
     return (
         <div className="max-w-xl mx-auto p-6 bg-white shadow-lg rounded-lg mt-8">
-            <h2 className="text-3xl font-bold text-[var(--darkestgreen)] mb-6 text-center">
+            <h2 className="text-3xl font-bold text-[var(--darkergreen)] mb-6 text-center">
                 Create a New Scrapbook
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4">
                 {/* Scrapbook Name */}
-                <label className="block text-lg font-semibold text-[var(--darkestgreen)]">
+                <label className="block text-lg font-semibold text-black">
                     Scrapbook Name:
                     <input
                         className="w-full border rounded-lg py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-[var(--mediumgreen)]"
@@ -55,7 +55,7 @@ export default function CreateScrapbookPage() {
 
                 {/* Width & Height Fields */}
                 <div className="grid grid-cols-2 gap-4">
-                    <label className="block text-lg font-semibold text-[var(--darkestgreen)]">
+                    <label className="block text-lg font-semibold text-black">
                         Width:
                         <input
                             className="w-full border rounded-lg py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-[var(--mediumgreen)]"
@@ -67,7 +67,7 @@ export default function CreateScrapbookPage() {
                         />
                     </label>
 
-                    <label className="block text-lg font-semibold text-[var(--darkestgreen)]">
+                    <label className="block text-lg font-semibold text-black">
                         Height:
                         <input
                             className="w-full border rounded-lg py-2 px-3 mt-1 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-[var(--mediumgreen)]"
@@ -82,7 +82,7 @@ export default function CreateScrapbookPage() {
 
                 {/* Visibility Selection */}
                 <fieldset className="border border-gray-300 rounded-lg p-4">
-                    <legend className="text-lg font-semibold text-[var(--darkestgreen)]">
+                    <legend className="text-lg font-semibold text-black">
                         Visibility:
                     </legend>
                     <div className="flex gap-4 mt-2">
