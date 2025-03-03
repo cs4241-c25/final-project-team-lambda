@@ -1,24 +1,26 @@
-import Image from "next/image";
-import { useContext } from "react";
+import { useContext, useState } from "react";
 import ScrapbookContext from "./ScrapbookContext";
-import DragResize from "./DragResize";
+import TransformControls from "./TransformControls";
 import { Element } from "@/lib/models";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
-    const { updateSelectedElement, setSelectedElement, selectedElement } = useContext(ScrapbookContext);
+    const { selectedElement } = useContext(ScrapbookContext);
+
+    // local element state
+    const [element, setElement] = useState(el);
+
     return (
-        <DragResize
-            element={el}
-            onUpdate={updateSelectedElement}
-            onSelect={setSelectedElement}
+        <TransformControls
+            element={element}
+            onUpdate={setElement}
             isSelected={selectedElement === el}
         >
-            {el.type === "text" && (
+            {element.type === "text" && (
                 <p
                     style={{
-                        fontSize: el.font_size,
-                        color: el.color,
-                        fontFamily: el.font,
+                        fontSize: element.font_size,
+                        color: element.color,
+                        fontFamily: element.font,
                         width: "100%",
                         height: "100%",
                         display: "flex",
@@ -26,13 +28,13 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                         justifyContent: "center",
                     }}
                 >
-                    {el.content}
+                    {element.content}
                 </p>
             )}
 
-            {el.type === "image" && (
+            {element.type === "image" && (
                 <img
-                    src={el.url}
+                    src={element.url}
                     alt="Scrapbook Image"
                     draggable={false}
                     style={{
@@ -43,20 +45,20 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                 />
             )}
 
-            {el.type === "rectangle" && (
-                <div style={{ width: "100%", height: "100%", backgroundColor: el.color }} />
+            {element.type === "rectangle" && (
+                <div style={{ width: "100%", height: "100%", backgroundColor: element.color }} />
             )}
 
-            {el.type === "circle" && (
+            {element.type === "circle" && (
                 <div
                     style={{
                         width: "100%",
                         height: "100%",
-                        backgroundColor: el.color,
+                        backgroundColor: element.color,
                         borderRadius: "50%",
                     }}
                 />
             )}
-        </DragResize>
+        </TransformControls>
     );
 }

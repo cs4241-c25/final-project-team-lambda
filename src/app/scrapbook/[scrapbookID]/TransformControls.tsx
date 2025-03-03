@@ -1,23 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
+import ScrapbookContext from "./ScrapbookContext";
 
-interface DragResizeProps {
+interface TransformControlsProps {
     element: any;
     onUpdate: (updatedElement: any) => void;
-    onSelect: (element: any) => void;
     isSelected: boolean;
     children: React.ReactNode;
 }
 
-const DragResize: React.FC<DragResizeProps> = ({
+export default function TransformControls({
     element,
     onUpdate,
-    onSelect,
     isSelected,
     children,
-}) => {
+}: TransformControlsProps) {
+    // element manipulation context
+    const { setSelectedElement, updateSelectedElement } = useContext(ScrapbookContext);
+    
+    // state to track dragging, resizing, and rotating
     const [dragging, setDragging] = useState(false);
     const [resizing, setResizing] = useState(false);
+    // const [rotating, setRotating] = useState(false);
+
+    // state to track starting position and size
     const [startPos, setStartPos] = useState({ mouseX: 0, mouseY: 0, elementX: 0, elementY: 0 });
     const [startSize, setStartSize] = useState({ width: 0, height: 0 });
 
@@ -41,7 +47,7 @@ const DragResize: React.FC<DragResizeProps> = ({
         if (element.isLocked && isSelected) return;
         if ((e.target as HTMLElement).classList.contains("resize-handle")) return;
         e.stopPropagation();
-        onSelect(element);
+        setSelectedElement(element);
         setDragging(true);
         setStartPos({
             mouseX: e.clientX,
@@ -94,6 +100,7 @@ const DragResize: React.FC<DragResizeProps> = ({
     const handleMouseUp = () => {
         if (dragging) setDragging(false);
         if (resizing) setResizing(false);
+        updateSelectedElement(element);
     };
 
     useEffect(() => {
@@ -114,7 +121,7 @@ const DragResize: React.FC<DragResizeProps> = ({
     const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (element.isLocked) return;
         e.stopPropagation();
-        onSelect(element);
+        setSelectedElement(element);
         setResizing(true);
         setStartPos({
             mouseX: e.clientX,
@@ -128,7 +135,7 @@ const DragResize: React.FC<DragResizeProps> = ({
     // function to lock/unlock element
     const toggleLock = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onSelect(element); // check element is selected before locking
+        setSelectedElement(element); // check element is selected before locking
         onUpdate({ ...element, isLocked: !element.isLocked });
     };
 
@@ -211,5 +218,3 @@ const DragResize: React.FC<DragResizeProps> = ({
         </div>
     );
 };
-
-export default DragResize;
