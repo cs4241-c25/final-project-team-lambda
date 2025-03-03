@@ -284,32 +284,13 @@ export default function Scrapbook() {
                         <Toolbox />
                         <PageNavigator scrapbook={scrapbook} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
+                    <button
+                        onClick={() => { if (confirm("Are you sure you want to delete this scrapbook?")) {deleteScrapbook(scrapbookID);}}}>
+                        Delete
+                    </button>
                 </main>
-            //TODO add styling from lower to upper
-
-                <div>
-                <p>{saveStatus}</p>
-                <h1>{scrapbook.title}</h1>
-                <h2>Pages</h2>
-                <ul>
-                    {scrapbook.pages.map((page) => (
-                        <li key={page.number}>
-                            <Link href={`/scrapbooks/${scrapbookID}/page/${page.number}`}>
-                                Page {page.number}
-                            </Link>
-                        </li>
-                    ))}
-                </ul>
-                <button
-                    onClick={() => { if (confirm("Are you sure you want to delete this scrapbook?")) {deleteScrapbook(scrapbookID);}}}>
-                    Delete
-                </button>
-                <button onClick={appendPage}>+ Add Page</button>
-
             </div>
-        );
-
-    } else if (scrapbookStatus === "loading") {
+    )} else if (scrapbookStatus === "loading") {
         return <div>Loading...</div>;
     } else {
         return <div>Error: {scrapbookStatus}</div>;

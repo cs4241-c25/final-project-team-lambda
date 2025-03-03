@@ -1,7 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { getScrapbooks } from "@/lib/db";
-import CreateScrapbook from "./CreateScrapbook";
 import Link from "next/link";
+import CreateScrapbookPage from "@/app/(app)/scrapbooks/create/page";
 
 export default async function Scrapbooks() {
     const session = await getSession();
@@ -23,10 +23,10 @@ export default async function Scrapbooks() {
                 <h1 className="text-3xl font-bold text-[black] mb-6">My Scrapbooks</h1>
 
                 {/* Scrapbook List */}
-                <ul className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     {scrapbooks.map(scrapbook => (
-                        <li key={scrapbook._id} className="bg-[var(--lightgreen)] p-4 rounded-lg shadow hover:bg-[var(--lightgreen)] transition">
-                            <Link href={`/scrapbooks/${scrapbook._id}`} className="text-xl font-semibold text-[var(--darkestgreen)] hover:text-[black]">
+                        <li key={scrapbook._id} className="bg-[var(--lightgreen)] p-4 rounded-lg shadow hover:bg-[var(--mediumgreen)] transition no-underline max-w-80">
+                            <Link href={`/scrapbooks/${scrapbook._id}`} className="text-xl font-semibold text-black no-underline">
                                 {scrapbook.title}
                             </Link>
                         </li>
@@ -35,7 +35,7 @@ export default async function Scrapbooks() {
 
                 {/* New Scrapbook Button */}
                 <div className="mt-6 flex justify-center">
-                    <CreateScrapbook />
+                    <CreateScrapbookPage />
                 </div>
             </main>
         );
