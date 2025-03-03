@@ -1,8 +1,10 @@
 "use client";
 
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
+import { useSession } from 'next-auth/react';
 
 // Model imports
 import { Element, IScrapbook } from '@/lib/models';
@@ -13,10 +15,24 @@ import PageNavigator from './PageNavigator';
 import ScrapbookContext from './ScrapbookContext';
 
 export default function Scrapbook() {
+    const router = useRouter();
+    const { data: session } = useSession()
     const { scrapbookID } = useParams<{ scrapbookID: string }>();
 
     // scrapbook state
-    const [ scrapbook, setScrapbook ] = useState<IScrapbook>();
+    const [ scrapbook, setScrapbook ] = useState<IScrapbook>({
+        _id: "",
+        visibility: "private",
+        title: "Loading...",
+        owner: "",
+        pages: [{
+            number: 1,
+            elements: []
+        }],
+        likes: [],
+        width: 816,
+        height: 1056
+    });
     const [ selectedElement, setSelectedElement ] = useState<Element | null>(null);
     const [ selectedPage, setSelectedPage ] = useState(1);
 
@@ -41,12 +57,13 @@ export default function Scrapbook() {
                 setScrapbook(data);
                 setScrapbookStatus("success");
             } else {
+                if (res.status === 403) router.push("/login");
                 const error = await res.text() as string;
                 setScrapbookStatus(error);
             }
         }
         fetchScrapbook();
-    }, [scrapbookID]);
+    }, [scrapbookID, router]);
 
     /**
      * Appends a new page to the scrapbook and saves it
@@ -245,16 +262,26 @@ export default function Scrapbook() {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, []);
 
-    if (scrapbookStatus === "success" && scrapbook) {
+    function Header() {
         return (
-            <div className="flex flex-1 min-h-0 flex-col">
-                <header className="flex items-center gap-4 px-4">
-                    <h1>{scrapbook.title}</h1>
-                    <p>{saveStatus}</p>
-                    { saveStatus === "Unsaved changes" &&
-                        <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
-                    }
-                </header>
+            <header className="flex items-center gap-4 px-4 py-2">
+                <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">{"<"}</Link>
+                <h1>{scrapbook.title}</h1>
+                <p>{saveStatus}</p>
+                { saveStatus === "Unsaved changes" &&
+                    <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                }
+                { session?.user && 
+                    <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
+                }
+            </header>
+        );
+    }
+
+    if (scrapbookStatus !== "error") {
+        return (
+            <body className="flex flex-col h-screen">
+                <Header />
                 <main className="flex flex-1 min-h-0">
                     <ScrapbookContext.Provider value={{
                         selectedElement, setSelectedElement,
@@ -265,11 +292,14 @@ export default function Scrapbook() {
                         <PageNavigator scrapbook={scrapbook} appendPage={appendPage} addElement={addElement} />
                     </ScrapbookContext.Provider>
                 </main>
-            </div>
+            </body>
         );
-    } else if (scrapbookStatus === "loading") {
-        return <div>Loading...</div>;
     } else {
-        return <div>Error: {scrapbookStatus}</div>;
+        return (
+            <body>
+                <Header />
+                <div>Error: {scrapbookStatus}</div>
+            </body>
+        );
     }
 }
