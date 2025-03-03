@@ -45,7 +45,9 @@ async function connect() {
 
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
-    name: string,
+    username: string
+    profName: string
+    email: string
     id: string
 }>;
 
@@ -78,7 +80,9 @@ export async function login(username: string, password: string): Promise<LoginRe
         ok: true,
         code: 200,
         data: {
-            name: user.username,
+            username: user.username,
+            profName: user.profName,
+            email: user.email,
             id: user._id
         }
     };
@@ -118,7 +122,7 @@ export async function register(username: string, password: string): Promise<Logi
     return {
         ok: true,
         code: 201,
-        data: { name: username, id }
+        data: { username, id, email: "", profName: "" }
     }
 }
 
