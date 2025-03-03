@@ -12,7 +12,7 @@ return (
                             alt="Life-Log-Logo-5"
                         />
                     <br></br>
-                    <p className="text-gray-700 text-base md:text-lg">DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION DESCRIPTION</p>
+                    <p className="text-gray-700 text-base md:text-lg">Welcome to LifeLog! A scrapbook creation site where you can create your own scrapbooks with multiple pages where you can utilize text, shapes, and stickers!</p>
                 </div>
                 <div className="flex items-center space-x-3">
                     <Link
