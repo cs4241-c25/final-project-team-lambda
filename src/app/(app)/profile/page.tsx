@@ -13,7 +13,7 @@ export default function Profile() {
 
     if (!(session?.user)) return null;
 
-    //console.log(session.user.name);
+    console.log(session);
 
     const handCheckboxChangeName = (event: ChangeEvent<HTMLInputElement>) => {
         setIsCheckedName(event.target.checked);
@@ -40,10 +40,10 @@ export default function Profile() {
 
                 <h1>Profile Information</h1>
 
-                <h2>Username:{session.user.name} </h2>
+                <h2>Username:{session.user.username} </h2>
 
                 <label htmlFor="name">Name: </label>
-                <input type="text" readOnly={isReadOnly} id="name" name={"name"} defaultValue={session.user.name}/>
+                <input type="text" readOnly={isReadOnly} id="name" name={"name"} defaultValue={session.user.profName}/>
                 <input type={"checkbox"} checked={isCheckedName} onChange={handCheckboxChangeName}/>
 
                 <br/>

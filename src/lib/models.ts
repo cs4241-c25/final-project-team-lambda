@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 
 export interface IUser {
     _id: string
-    username: string
+    name: string
     profName: string
     email: string
     password: string

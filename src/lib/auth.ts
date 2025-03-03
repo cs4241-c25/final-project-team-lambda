@@ -27,7 +27,9 @@ const authOptions: AuthOptions = {
         // Modify these (and types/next-auth.d.ts) to add additional user information
         async session({ session, token }: { session: Session; token: JWT }) {
             if (token) {
-                session.user.name = token.name!;
+                session.user.username = token.name!;
+                //session.user.profName = token.profName!;
+                session.user.email = token.email!;
                 session.user.id = token.id! as string;
             }
             return session;
@@ -35,6 +37,8 @@ const authOptions: AuthOptions = {
         async jwt({ token, user }: {token: JWT; user: User}) {
             if (user) {
                 token.name = user.name;
+                //token.name = user.profName;
+                token.email = user.email;
                 token.id = user.id;
             }
             return token;

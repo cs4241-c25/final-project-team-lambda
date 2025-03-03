@@ -45,7 +45,7 @@ async function connect() {
 
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
-    username: string,
+    name: string,
     profName: string,
     id: string
 }>;
@@ -79,8 +79,8 @@ export async function login(username: string, password: string): Promise<LoginRe
         ok: true,
         code: 200,
         data: {
-            username: user.username,
-            profName: user.username,
+            name: user.name,
+            profName: user.profName,
             id: user._id
         }
     };
