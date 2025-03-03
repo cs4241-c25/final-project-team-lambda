@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
 import ScrapbookContext from "./ScrapbookContext";
 import { Element } from "@/lib/models";
@@ -12,7 +12,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
     // local element state
     const [element, setElement] = useState({ ...el, isLocked: false });
     useEffect(() => setElement((prev) => ({ ...el, isLocked: prev.isLocked })), [el]);
-    console.log(el);
+    const ref = useRef<HTMLDivElement>(null);
 
     // element manipulation context
     const { selectedElement, setSelectedElement, updateSelectedElement } = useContext(ScrapbookContext);
@@ -21,7 +21,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
     // state to track dragging, resizing, and rotating
     const [dragging, setDragging] = useState(false);
     const [resizing, setResizing] = useState(false);
-    // const [rotating, setRotating] = useState(false);
+    const [rotating, setRotating] = useState(false);
 
     // state to track starting position and size
     const [startPos, setStartPos] = useState({ mouseX: 0, mouseY: 0, elementX: 0, elementY: 0 });
@@ -84,6 +84,20 @@ export default function TransformControls({ el, children }: TransformControlsPro
                     size: newDiameter / 2,
                 });
             }
+        } else if (rotating) {
+            if (!("rotation" in element)) return;
+
+            const rect = ref.current?.getBoundingClientRect();
+            if (!rect) return;
+
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const angle = (Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90 + 360) % 360;
+            setElement({
+                ...element,
+                rotation: Math.round(angle),
+            });
         }
     };
 
@@ -91,6 +105,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
     const handleMouseUp = () => {
         if (dragging) setDragging(false);
         if (resizing) setResizing(false);
+        if (rotating) setRotating(false);
 
         // update the element, removing the isLocked property
         const { isLocked, ...newElement } = element;
@@ -98,7 +113,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
     };
 
     useEffect(() => {
-        if (dragging || resizing) {
+        if (dragging || resizing || rotating) {
             window.addEventListener("mousemove", handleMouseMove);
             window.addEventListener("mouseup", handleMouseUp);
         } else {
@@ -109,7 +124,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [dragging, resizing, startPos, startSize, element]);
+    }, [dragging, resizing, rotating, startPos, startSize, element]);
 
     // function to start resizing
     const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
@@ -126,6 +141,13 @@ export default function TransformControls({ el, children }: TransformControlsPro
         });
         setStartSize(getElementDimensions());
     };
+
+    const handleRotateMouseDown = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (element.isLocked) return;
+        e.stopPropagation();
+        setSelectedElement(el);
+        setRotating(true);
+    }
 
     // function to lock/unlock element
     const toggleLock = (e: React.MouseEvent) => {
@@ -150,6 +172,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
                 userSelect: "none",
                 pointerEvents: "auto", // allow locked elements to be selected
             }}
+            ref={ref}
         >
             {children}
 
@@ -210,6 +233,16 @@ export default function TransformControls({ el, children }: TransformControlsPro
                     />
                 );
             })}
+            { "rotation" in element && isSelected && !element.isLocked &&
+                <div className="absolute bottom-full left-[48%] flex flex-col items-center pointer-events-none">
+                    <button
+                        aria-label="Rotate Element"
+                        className="w-2 h-2 rounded-full bg-gray-200 border-2 border-red-600 pointer-events-auto cursor-grab"
+                        onMouseDown={handleRotateMouseDown}
+                    ></button>
+                    <div className="w-0.5 h-3 bg-red-600"></div>
+                </div>
+            }
         </div>
     );
 };
