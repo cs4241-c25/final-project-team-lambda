@@ -36,7 +36,7 @@ export default function Login() {
         <main>
             <div
                 className="bg-cover bg-center bg-fixed h-screen flex justify-center items-center"
-                 style={{ backgroundImage: "url('https://picsum.photos/1920/1080')"}} // or scrapbook pages collage image
+                 style={{ backgroundImage: "url('https://picsum.photos/1920/1080')"}}
             >
             <div className="bg-white mx-4 p-8 rounded shadow-md w-full md:w-1/2 lg:w-1/3">
             <h1 className="text-3xl font-bold mb-8 text-center text-black">Log In</h1>
