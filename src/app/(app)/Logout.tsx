@@ -11,5 +11,5 @@ export default function Logout() {
         router.refresh();
     }
 
-    return <button className="no-underline hover:underline" onClick={handleClick}>Logout</button>
+    return <button className="bg-[--darkgreen] no-underline px-4 py-2 rounded-md hover:text-white" onClick={handleClick}>Logout</button>
 }

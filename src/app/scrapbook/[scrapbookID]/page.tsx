@@ -1,7 +1,9 @@
 "use client";
 
-import { useParams, useRouter } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
+
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 import { useSession } from 'next-auth/react';
@@ -264,12 +266,19 @@ export default function Scrapbook() {
 
     function Header() {
         return (
-            <header className="flex items-center gap-4 px-4 py-2">
-                <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">{"<"}</Link>
-                <h1>{scrapbook.title}</h1>
+            <header className="flex items-center gap-4 [&_a]no-underline px-4 py-2 bg-[--mediumgreen] h-fit">
+                <Link href="/scrapbooks" className="no-underline text-lg" title="Back to your scrapbooks">
+                    <Image
+                        src="/images/logo-small.png"
+                        alt="The LifeLog logo depicting an outline of an open book."
+                        width="50"
+                        height="50"
+                    />
+                </Link>
+                <h2>{scrapbook.title}</h2>
                 <p>{saveStatus}</p>
                 { saveStatus === "Unsaved changes" &&
-                    <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                    <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
                 { session?.user && 
                     <Link href="/profile" className="ml-auto no-underline">{session.user.profName}</Link>
