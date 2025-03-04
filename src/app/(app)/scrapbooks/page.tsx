@@ -24,7 +24,7 @@ export default async function Scrapbooks() {
             <ul>
                 {scrapbooks.map((scrapbook) => (
                     <li key={scrapbook._id}>
-                        <Link href={`/scrapbooks/${scrapbook._id}`}>{scrapbook.title}</Link>
+                        <Link href={`/scrapbook/${scrapbook._id}`}>{scrapbook.title}</Link>
                     </li>
                 ))}
             </ul>
