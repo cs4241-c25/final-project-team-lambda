@@ -3,6 +3,7 @@
 import { useParams } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
+import html2canvas from "html2canvas";
 
 // Model imports
 import { Element, IScrapbook } from '@/lib/models';
@@ -29,6 +30,20 @@ export default function Scrapbook() {
     const deleteSelectedElementRef = useRef<() => void>(() => {});
     deleteSelectedElementRef.current = deleteSelectedElement;
 
+    const exportScrapbookAsImage = async () => {
+        const element = document.getElementById("canvas");
+        if (!element) return;
+
+        const canvas = await html2canvas(element);
+        const dataURL = canvas.toDataURL("image/png");
+
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "scrapbook.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
     /**
      * Fetches the scrapbook from the database
      */
@@ -254,6 +269,12 @@ export default function Scrapbook() {
                     { saveStatus === "Unsaved changes" &&
                         <button className="bg-[#9DA993] text-white px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                     }
+                    <button
+                        className="bg-[#9DA993] text-white px-2 py-0.5 rounded ml-2 "
+                        onClick={exportScrapbookAsImage}
+                    >
+                        Export
+                    </button>
                 </header>
                 <main className="flex flex-1 min-h-0">
                     <ScrapbookContext.Provider value={{

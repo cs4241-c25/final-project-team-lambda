@@ -3,6 +3,7 @@ import ScrapbookElement from './ScrapbookElement';
 import { MouseEvent, useContext } from 'react';
 import ScrapbookContext from './ScrapbookContext';
 
+
 export default function ScrapbookPage({ size, page, zoom }: { size: {width: number, height: number}, page: Page, zoom: number }) {
     const { setSelectedElement } = useContext(ScrapbookContext);
 

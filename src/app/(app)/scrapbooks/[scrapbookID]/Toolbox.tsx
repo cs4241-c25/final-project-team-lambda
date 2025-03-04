@@ -1,7 +1,6 @@
 import React, { useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
 import ImageUpload from "./ImageUpload";
-
 import ValidatedNumberInput from "./ValidatedInput";
 
 export default function Toolbox() {
@@ -14,6 +13,8 @@ export default function Toolbox() {
     const handleUpdate = (key: string, value: unknown) => {
         updateSelectedElement({ ...selectedElement, [key]: value });
     };
+
+
 
     return (
         <div className="w-64 bg-[#E7E7E7] p-4 shadow-lg h-full flex flex-col flex-shrink-0">

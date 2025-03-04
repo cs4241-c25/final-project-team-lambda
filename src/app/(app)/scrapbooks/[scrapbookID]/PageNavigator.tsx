@@ -1,6 +1,7 @@
 // Library imports
 import { useState, useContext, useRef } from "react";
 
+
 // Model imports
 import { IScrapbook } from "@/lib/models";
 
@@ -44,6 +45,7 @@ export default function PageNavigator(
         setZoom(containerHeight ? containerHeight / scrapbook.height : 1);
     }
 
+
     return (
         <div className="flex flex-1 min-h-0 mx-4 gap-2">
             { selectedPage == 1 ?
@@ -62,7 +64,9 @@ export default function PageNavigator(
                             >
                                 {type.charAt(0).toUpperCase() + type.slice(1)}
                             </button>
+
                         ))}
+
                     </div>
                     <div className="flex gap-2 [&_*]:bg-[#9DA993] [&_*]:text-white [&_*]:rounded [&_*]:w-10">
                         <button onClick={() => setZoom(zoom / 1.1)}>-</button>
