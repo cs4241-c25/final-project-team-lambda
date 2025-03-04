@@ -58,13 +58,13 @@ export default function PageNavigator(
                             <button
                                 key={type}
                                 onClick={() => addElement(type)}
-                                className="p-2 bg-[#9DA993] text-white rounded"
+                                className="p-2 bg-[--mediumgreen] text-white rounded"
                             >
                                 {type.charAt(0).toUpperCase() + type.slice(1)}
                             </button>
                         ))}
                     </div>
-                    <div className="flex gap-2 [&_*]:bg-[#9DA993] [&_*]:text-white [&_*]:rounded [&_*]:w-10">
+                    <div className="flex gap-2 [&_*]:bg-[--mediumgreen] [&_*]:text-white [&_*]:rounded [&_*]:w-10">
                         <button onClick={() => setZoom(zoom / 1.1)}>-</button>
                         <button onClick={() => fitWidth()}>↔</button>
                         <button onClick={() => fitHeight()}>↕</button>
