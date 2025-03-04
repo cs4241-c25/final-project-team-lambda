@@ -2,8 +2,7 @@ import mongoose from 'mongoose';
 import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
-import { User, IUser, Scrapbook, IScrapbook } from './models';
-import { unauthorized } from 'next/navigation';
+import { User, IUser, Scrapbook, IScrapbook, Sticker, ISticker } from './models';
 
 const DB_URI = process.env.DB_URI;
 const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .env.local';
@@ -255,3 +254,30 @@ export async function saveScrapbook(scrapbook: IScrapbook, owner: string): Promi
         return { ok: false, code: 500, error: "Error updating scrapbook" };
     }
 }
+
+/**
+ * Retrieves all premade Stickers
+ * @async
+ * @returns {Promise<DBResult<ISticker[]>>} Returns Stickers
+ */
+export async function getStickers(): Promise<DBResult<ISticker[]>> {
+    await connect();
+
+    try {
+        const stickers: ISticker[] = await Sticker.find({}).lean();
+
+        // Ensure stickers are JSON serializable
+        const serializedStickers = stickers.map(sticker => ({
+            _id: sticker._id.toString(),
+            url: sticker.url,
+            width: sticker.width,
+            height: sticker.height,
+        }));
+
+        return { ok: true, code: 200, data: serializedStickers };
+    } catch (e) {
+        console.error("Error getting stickers:", e);
+        return { ok: false, code: 500, error: "Error fetching stickers" };
+    }
+}
+

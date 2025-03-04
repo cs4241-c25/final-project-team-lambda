@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import ScrapbookContext from "./ScrapbookContext";
 import ImageUpload from "./ImageUpload";
+import Stickers from "./Stickers";
 
 import ValidatedNumberInput from "./ValidatedInput";
 
@@ -127,11 +128,21 @@ export default function Toolbox() {
                 <>
                     <label className="block text-sm" style={{ fontFamily: 'Garogier' }}>Upload Image:</label>
                     <ImageUpload
-                        onUpload={(url, width, height, fileId) => {
+                        onUpload={(url, width, height, fileID) => {
+                            const maxSize = 500;
+                            let newWidth = width;
+                            let newHeight = height;
+
+                            const scaleRatio = maxSize / Math.max(newWidth, newHeight);
+                            if (scaleRatio < 1) {
+                                newWidth = Math.round(newWidth * scaleRatio);
+                                newHeight = Math.round(newHeight * scaleRatio);
+                            }
+
                             updateSelectedElement({
                                 ...selectedElement,
                                 url,
-                                size: { x: width, y: height }
+                                size: { x: newWidth, y: newHeight }
                             });
                         }}
                     />
@@ -173,6 +184,25 @@ export default function Toolbox() {
             }}>
                 Delete
             </button>
+            <Stickers
+                onSelect={(url, width, height) => {
+                    const maxSize = 200;
+                    let newWidth = width;
+                    let newHeight = height;
+
+                    const scaleRatio = maxSize / Math.max(newWidth, newHeight);
+                    if (scaleRatio < 1) {
+                        newWidth = Math.round(newWidth * scaleRatio);
+                        newHeight = Math.round(newHeight * scaleRatio);
+                    }
+
+                    updateSelectedElement({
+                        ...selectedElement,
+                        url,
+                        size: { x: newWidth, y: newHeight }
+                    });
+                }}
+            />
         </div>
     );
 };

@@ -28,7 +28,7 @@ export default function ScrapbookElement({ el }: { el: Element }) {
                     draggable={false}
                     style={{
                         width: "100%",
-                        height: "100%",
+                        height:  "100%",
                         objectFit: "fill",
                     }}
                 />
