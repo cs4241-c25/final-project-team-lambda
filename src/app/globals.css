@@ -3,21 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* custom styles */
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
-/* default styles */
-
+/* fonts */
 @font-face {
   font-family: 'Garogier';
   src: url('/fonts/Garogier.ttf') format('truetype');
@@ -25,21 +11,51 @@
   font-style: normal;
 }
 
+/* custom styles */
+:root {
+  --background: #ffffff;
+  --foreground: #171717;
+  --darkestgreen: #252e25;
+  --darkergreen: #405240;
+  --darkgreen: #6D886D;
+  --mediumgreen: #7B997B;
+  --lightgreen: #90B390;
+  --darkblue: #7883A9;
+  --mediumblue: #8A97C2;
+  --lightblue: #9AA9D9;
+  --darkpink: #996E6C;
+  --mediumpink: #C28C8A;
+  --lightpink: #DD9F9D;
+  --darkpurple: #7B6B85;
+  --mediumpurple: #8E7B99;
+  --lightpurple: #AB94B9;
+  --mediumtext: 1rem;
+}
+
+/* default styles */
+
+:root {
+  font-family: "EB Garamond", serif;
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  /* font-family: 'EB Garamond', serif; */
 }
 
 h1 {
-  font-size: 2rem;
+  font-size: 2em;
+  font-family: Georgia, serif;
+  margin: 0.67em 0;
+  font-weight: inherit;
 }
 
 h2 {
   font-size: 1.5rem;
 }
 
-h3 {
+h3, p, a {
   font-size: 1.25rem;
 }
 
