@@ -45,7 +45,7 @@ export default function PageNavigator(
     }
 
     return (
-        <div className="flex flex-1 min-h-0 mx-4 gap-2">
+        <div className="flex flex-1 min-h-0 mx-4 gap-2 mt-2">
             { selectedPage == 1 ?
                 <div className="w-6"></div> :
                 <button className="w-6 m-auto" onClick={() => setSelectedPage(selectedPage - 1)}>{"<"}</button>
