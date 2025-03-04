@@ -36,64 +36,63 @@ export default function CreateScrapbookPage() {
     }
 
     return (
-        <div>
-            <h2>Create a New Scrapbook</h2>
-            <form onSubmit={handleSubmit}>
-                <label>
-                    Scrapbook Name:
-                    <input
-                        type="text"
-                        value={title}
-                        onChange={(e) => setTitle(e.target.value)}
-                        required
-                    />
-                </label>
-                <label>
-                    Width:
-                    <input
-                        type="number"
-                        value={width}
-                        onChange={(e) => setWidth(Number(e.target.value))}
-                        min="100"
-                        required
-                    />
-                </label>
-                <label>
-                    Height:
-                    <input
-                        type="number"
-                        value={height}
-                        onChange={(e) => setHeight(Number(e.target.value))}
-                        min="100"
-                        required
-                    />
-                </label>
-                <fieldset>
+        <main className="flex flex-col justify-center items-center h-full gap-4">
+            <h2 className="font-bold">Create a New Scrapbook</h2>
+            <form onSubmit={handleSubmit} className="flex flex-col gap-2 w-[500px]">
+                <label>Scrapbook Name:</label>
+                <input
+                    type="text"
+                    value={title}
+                    onChange={(e) => setTitle(e.target.value)}
+                    required
+                    className="p-2 mb-2"
+                />
+                <div className="flex gap-4 mb-2">
+                    <div className="flex flex-col flex-grow">
+                        <label>Width:</label>
+                        <input
+                            type="number"
+                            value={width}
+                            onChange={(e) => setWidth(Number(e.target.value))}
+                            min="100"
+                            required
+                            className="p-2"
+                        />
+                    </div>
+                    <div className="flex flex-col flex-grow">
+                        <label>Height:</label>
+                        <input
+                            type="number"
+                            value={height}
+                            onChange={(e) => setHeight(Number(e.target.value))}
+                            min="100"
+                            required
+                            className="p-2"
+                        />
+                    </div>
+                </div>
+                <fieldset className="border-2 border-gray-300 rounded p-2 mb-4">
                     <legend>Visibility:</legend>
-                    <label>
-                        <input
-                            type="radio"
-                            value="public"
-                            checked={visibility === "public"}
-                            onChange={() => setVisibility("public")}
-                        />
-                        Public
-                    </label>
-                    <label>
-                        <input
-                            type="radio"
-                            value="private"
-                            checked={visibility === "private"}
-                            onChange={() => setVisibility("private")}
-                        />
-                        Private
-                    </label>
+                    <input
+                        type="radio"
+                        value="public"
+                        checked={visibility === "public"}
+                        onChange={() => setVisibility("public")}
+                    />
+                    <label className="ml-1 mr-2">Public</label>
+                    <input
+                        type="radio"
+                        value="private"
+                        checked={visibility === "private"}
+                        onChange={() => setVisibility("private")}
+                    />
+                    <label className="ml-1 mr-2">Private</label>
                 </fieldset>
-                <button type="submit" disabled={creating}>
+                <button type="submit" disabled={creating} className="bg-[--mediumgreen] text-white p-2 rounded">
                     {creating ? "Creating..." : "Create Scrapbook"}
                 </button>
                 {error && <p style={{ color: "red" }}>{error}</p>}
             </form>
-        </div>
+        </main>
     );
 }

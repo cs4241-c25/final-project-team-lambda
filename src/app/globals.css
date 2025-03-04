@@ -35,7 +35,8 @@
 /* default styles */
 
 :root {
-  font-family: "EB Garamond", serif;
+  font-family: "Garogier", serif;
+  font-size: 1.25em;
 }
 
 body {
@@ -55,8 +56,8 @@ h2 {
   font-size: 1.5rem;
 }
 
-h3, a {
-  font-size: 1.25rem;
+input[type="password"] {
+  font-family: serif;
 }
 
 a {
