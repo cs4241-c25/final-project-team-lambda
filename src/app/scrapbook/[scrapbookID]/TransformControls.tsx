@@ -1,23 +1,29 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import { FaLock, FaLockOpen } from "react-icons/fa";
+import ScrapbookContext from "./ScrapbookContext";
+import { Element } from "@/lib/models";
 
-interface DragResizeProps {
-    element: any;
-    onUpdate: (updatedElement: any) => void;
-    onSelect: (element: any) => void;
-    isSelected: boolean;
+interface TransformControlsProps {
+    el: Element
     children: React.ReactNode;
 }
 
-const DragResize: React.FC<DragResizeProps> = ({
-    element,
-    onUpdate,
-    onSelect,
-    isSelected,
-    children,
-}) => {
+export default function TransformControls({ el, children }: TransformControlsProps) {
+    // local element state
+    const [element, setElement] = useState({ ...el, isLocked: false });
+    useEffect(() => setElement((prev) => ({ ...el, isLocked: prev.isLocked })), [el]);
+    const ref = useRef<HTMLDivElement>(null);
+
+    // element manipulation context
+    const { selectedElement, setSelectedElement, updateSelectedElement } = useContext(ScrapbookContext);
+    const isSelected = el === selectedElement;
+    
+    // state to track dragging, resizing, and rotating
     const [dragging, setDragging] = useState(false);
     const [resizing, setResizing] = useState(false);
+    const [rotating, setRotating] = useState(false);
+
+    // state to track starting position and size
     const [startPos, setStartPos] = useState({ mouseX: 0, mouseY: 0, elementX: 0, elementY: 0 });
     const [startSize, setStartSize] = useState({ width: 0, height: 0 });
 
@@ -27,8 +33,6 @@ const DragResize: React.FC<DragResizeProps> = ({
             return { width: element.size.x, height: element.size.y };
         } else if (typeof element.size === "number") {
             return { width: element.size * 2, height: element.size * 2 };
-        } else if (element.scale) {
-            return { width: element.scale.x * 100, height: element.scale.y * 100 };
         }
         return { width: 100, height: 100 };
     };
@@ -41,7 +45,8 @@ const DragResize: React.FC<DragResizeProps> = ({
         if (element.isLocked && isSelected) return;
         if ((e.target as HTMLElement).classList.contains("resize-handle")) return;
         e.stopPropagation();
-        onSelect(element);
+
+        setSelectedElement(el);
         setDragging(true);
         setStartPos({
             mouseX: e.clientX,
@@ -59,34 +64,40 @@ const DragResize: React.FC<DragResizeProps> = ({
         const deltaY = e.clientY - startPos.mouseY;
 
         if (dragging) {
-            onUpdate({
+            setElement({
                 ...element,
                 position: { x: startPos.elementX + deltaX, y: startPos.elementY + deltaY },
             });
         } else if (resizing) {
-            if (element.size && typeof element.size === "object") {
-                onUpdate({
+            if (element.type !== "circle") {
+                setElement({
                     ...element,
                     size: {
                         x: Math.max(20, startSize.width + deltaX),
                         y: Math.max(20, startSize.height + deltaY),
                     },
                 });
-            } else if (typeof element.size === "number") {
+            } else if (element.type == "circle") {
                 const newDiameter = Math.max(20, startSize.width + deltaX);
-                onUpdate({
+                setElement({
                     ...element,
                     size: newDiameter / 2,
                 });
-            } else if (element.scale) {
-                onUpdate({
-                    ...element,
-                    scale: {
-                        x: Math.max(0.1, startSize.width + deltaX) / 100,
-                        y: Math.max(0.1, startSize.height + deltaY) / 100,
-                    },
-                });
             }
+        } else if (rotating) {
+            if (!("rotation" in element)) return;
+
+            const rect = ref.current?.getBoundingClientRect();
+            if (!rect) return;
+
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            const angle = (Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90 + 360) % 360;
+            setElement({
+                ...element,
+                rotation: Math.round(angle),
+            });
         }
     };
 
@@ -94,10 +105,15 @@ const DragResize: React.FC<DragResizeProps> = ({
     const handleMouseUp = () => {
         if (dragging) setDragging(false);
         if (resizing) setResizing(false);
+        if (rotating) setRotating(false);
+
+        // update the element, removing the isLocked property
+        const { isLocked, ...newElement } = element;
+        updateSelectedElement(newElement);
     };
 
     useEffect(() => {
-        if (dragging || resizing) {
+        if (dragging || resizing || rotating) {
             window.addEventListener("mousemove", handleMouseMove);
             window.addEventListener("mouseup", handleMouseUp);
         } else {
@@ -108,13 +124,14 @@ const DragResize: React.FC<DragResizeProps> = ({
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [dragging, resizing, startPos, startSize, element]);
+    }, [dragging, resizing, rotating, startPos, startSize, element]);
 
     // function to start resizing
     const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {
         if (element.isLocked) return;
         e.stopPropagation();
-        onSelect(element);
+
+        setSelectedElement(el);
         setResizing(true);
         setStartPos({
             mouseX: e.clientX,
@@ -125,11 +142,18 @@ const DragResize: React.FC<DragResizeProps> = ({
         setStartSize(getElementDimensions());
     };
 
+    const handleRotateMouseDown = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
+        if (element.isLocked) return;
+        e.stopPropagation();
+        setSelectedElement(el);
+        setRotating(true);
+    }
+
     // function to lock/unlock element
     const toggleLock = (e: React.MouseEvent) => {
         e.stopPropagation();
-        onSelect(element); // check element is selected before locking
-        onUpdate({ ...element, isLocked: !element.isLocked });
+        if (!isSelected) return;
+        setElement({ ...element, isLocked: !element.isLocked });
     };
 
     return (
@@ -139,7 +163,7 @@ const DragResize: React.FC<DragResizeProps> = ({
                 position: "absolute",
                 top: element.position.y,
                 left: element.position.x,
-                transform: `rotate(${element.rotation}deg)`,
+                transform: ("rotation" in element) ? `rotate(${element.rotation}deg)` : "none",
                 width: dimensions.width,
                 height: dimensions.height,
                 border: isSelected ? "2px dashed #FF0000" : "2px dashed transparent",
@@ -148,6 +172,7 @@ const DragResize: React.FC<DragResizeProps> = ({
                 userSelect: "none",
                 pointerEvents: "auto", // allow locked elements to be selected
             }}
+            ref={ref}
         >
             {children}
 
@@ -208,8 +233,16 @@ const DragResize: React.FC<DragResizeProps> = ({
                     />
                 );
             })}
+            { "rotation" in element && isSelected && !element.isLocked &&
+                <div className="absolute bottom-full left-[48%] flex flex-col items-center pointer-events-none">
+                    <button
+                        aria-label="Rotate Element"
+                        className="w-2 h-2 rounded-full bg-gray-200 border-2 border-red-600 pointer-events-auto cursor-grab"
+                        onMouseDown={handleRotateMouseDown}
+                    ></button>
+                    <div className="w-0.5 h-3 bg-red-600"></div>
+                </div>
+            }
         </div>
     );
 };
-
-export default DragResize;
