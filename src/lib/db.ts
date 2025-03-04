@@ -3,6 +3,7 @@ import * as bcrypt from 'bcrypt';
 import { v4 as uuid } from 'uuid';
 
 import { User, IUser, Scrapbook, IScrapbook } from './models';
+import { unauthorized } from 'next/navigation';
 
 const DB_URI = process.env.DB_URI;
 const NO_URI_ERR = 'Please define the MONGODB_URI environment variable inside .env.local';
@@ -87,6 +88,32 @@ export async function login(username: string, password: string): Promise<LoginRe
         }
     };
 }
+
+export async function update(profName: string, email: string, username: string): Promise<LoginResult> {
+    await connect();
+
+    console.log("profName: " + profName)
+
+    const unauthorized = {
+        ok: false,
+        code: 401,
+        error: "Username or password is incorrect."
+    } as const;
+
+    const user: IUser | null = await User.findOneAndUpdate({ username: username }, {profName: profName, email: email}, {
+        new: true,
+        upsert: true
+    })
+    if (!user) return unauthorized
+
+    console.log(User)
+
+    return {
+        ok: true,
+        code: 201,
+        data: { profName, email, username, id: user._id }
+    }
+} 
 
 /**
  * Registers a new user in the database
