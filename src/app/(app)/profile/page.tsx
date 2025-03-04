@@ -73,7 +73,6 @@ export default function Profile() {
 
     return (
         <main>
-            <h2>Image: </h2>
             <form>
                 <h1>Profile Information</h1>
 
