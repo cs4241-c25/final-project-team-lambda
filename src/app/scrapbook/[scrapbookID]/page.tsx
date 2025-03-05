@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 import { useSession } from 'next-auth/react';
+import html2canvas from "html2canvas";
 
 // Model imports
 import { Element, IScrapbook } from '@/lib/models';
@@ -46,6 +47,28 @@ export default function Scrapbook() {
     // Refs to store the current function
     const deleteSelectedElementRef = useRef<() => void>(() => {});
     deleteSelectedElementRef.current = deleteSelectedElement;
+
+    const exportScrapbookAsImage = async () => {
+        const element = document.getElementById("canvas");
+        if (!element) return;
+        const { width, height } = element.getBoundingClientRect();
+        const canvas = await html2canvas(element, {
+            useCORS: true,
+            allowTaint: true,
+            logging: false,
+            width,
+            height,
+            scrollX: 0,
+            scrollY: 0,
+        });
+        const dataURL = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "scrapbook.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     /**
      * Fetches the scrapbook from the database
@@ -278,8 +301,15 @@ export default function Scrapbook() {
                 <h2>{scrapbook.title}</h2>
                 <p>{saveStatus}</p>
                 { saveStatus === "Unsaved changes" &&
-                    <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                    <button className="bg-[--darkgreen] px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
+                <button
+                    className="bg-[--darkgreen] px-2 py-0.5 rounded ml-2 "
+                    onClick={exportScrapbookAsImage}
+                >
+                    Export
+                </button>
+
                 { session?.user && 
                     <Link href="/profile" className="ml-auto no-underline">{session.user.profName}</Link>
                 }
