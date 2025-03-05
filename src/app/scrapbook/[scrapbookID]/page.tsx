@@ -301,7 +301,7 @@ export default function Scrapbook() {
                 <h2>{scrapbook.title}</h2>
                 <p>{saveStatus}</p>
                 { saveStatus === "Unsaved changes" &&
-                    <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                    <button className="bg-[--darkgreen] px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
                 <button
                     className="bg-[--darkgreen] px-2 py-0.5 rounded ml-2 "
@@ -311,7 +311,7 @@ export default function Scrapbook() {
                 </button>
 
                 { session?.user && 
-                    <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
+                    <Link href="/profile" className="ml-auto no-underline">{session.user.profName}</Link>
                 }
             </header>
         );
