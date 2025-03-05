@@ -51,15 +51,17 @@ export default function Scrapbook() {
     const exportScrapbookAsImage = async () => {
         const element = document.getElementById("canvas");
         if (!element) return;
-
+        const { width, height } = element.getBoundingClientRect();
         const canvas = await html2canvas(element, {
             useCORS: true,
             allowTaint: true,
-            logging: false
+            logging: false,
+            width,
+            height,
+            scrollX: 0,
+            scrollY: 0,
         });
-
         const dataURL = canvas.toDataURL("image/png");
-
         const link = document.createElement("a");
         link.href = dataURL;
         link.download = "scrapbook.png";
@@ -67,7 +69,6 @@ export default function Scrapbook() {
         link.click();
         document.body.removeChild(link);
     };
-
 
     /**
      * Fetches the scrapbook from the database
