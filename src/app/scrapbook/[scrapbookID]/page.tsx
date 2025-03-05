@@ -7,6 +7,7 @@ import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
 import { produce } from 'immer';
 import { useSession } from 'next-auth/react';
+import html2canvas from "html2canvas";
 
 // Model imports
 import { Element, IScrapbook } from '@/lib/models';
@@ -46,6 +47,27 @@ export default function Scrapbook() {
     // Refs to store the current function
     const deleteSelectedElementRef = useRef<() => void>(() => {});
     deleteSelectedElementRef.current = deleteSelectedElement;
+
+    const exportScrapbookAsImage = async () => {
+        const element = document.getElementById("canvas");
+        if (!element) return;
+
+        const canvas = await html2canvas(element, {
+            useCORS: true,
+            allowTaint: true,
+            logging: false
+        });
+
+        const dataURL = canvas.toDataURL("image/png");
+
+        const link = document.createElement("a");
+        link.href = dataURL;
+        link.download = "scrapbook.png";
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
+
 
     /**
      * Fetches the scrapbook from the database
@@ -280,6 +302,13 @@ export default function Scrapbook() {
                 { saveStatus === "Unsaved changes" &&
                     <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
+                <button
+                    className="bg-[--darkgreen] px-2 py-0.5 rounded ml-2 "
+                    onClick={exportScrapbookAsImage}
+                >
+                    Export
+                </button>
+
                 { session?.user && 
                     <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
                 }
