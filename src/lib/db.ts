@@ -45,7 +45,9 @@ async function connect() {
 
 /** Type definition for login operation results */
 type LoginResult = DBResult<{
-    name: string,
+    username: string
+    profName: string
+    email: string
     id: string
 }>;
 
@@ -78,11 +80,39 @@ export async function login(username: string, password: string): Promise<LoginRe
         ok: true,
         code: 200,
         data: {
-            name: user.username,
+            username: user.username,
+            profName: user.profName,
+            email: user.email,
             id: user._id
         }
     };
 }
+
+export async function update(profName: string, email: string, username: string): Promise<LoginResult> {
+    await connect();
+
+    console.log("profName: " + profName)
+
+    const unauthorized = {
+        ok: false,
+        code: 401,
+        error: "Username or password is incorrect."
+    } as const;
+
+    const user: IUser | null = await User.findOneAndUpdate({ username: username }, {profName: profName, email: email}, {
+        new: true,
+        upsert: true
+    })
+    if (!user) return unauthorized
+
+    console.log(User)
+
+    return {
+        ok: true,
+        code: 201,
+        data: { profName, email, username, id: user._id }
+    }
+} 
 
 /**
  * Registers a new user in the database
@@ -106,11 +136,15 @@ export async function register(username: string, password: string): Promise<Logi
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const id = uuid();
+    const email = "";
+    const profName = username
 
     // insert user into database
     const newUser = new User({
         _id: id,
         username,
+        profName: profName,
+        email,
         password: hashedPassword
     });
     await newUser.save();
@@ -118,7 +152,7 @@ export async function register(username: string, password: string): Promise<Logi
     return {
         ok: true,
         code: 201,
-        data: { name: username, id }
+        data: { username, profName, email, id }
     }
 }
 

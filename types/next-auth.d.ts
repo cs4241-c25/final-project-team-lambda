@@ -6,8 +6,27 @@ declare module "next-auth" {
      */
     interface Session {
         user: {
-            name: string
+            username: string
+            profName: string
+            email: string
             id: string
         }
+    }
+
+    interface User {
+        username: string
+        profName: string
+        email: string
+        id: string
+    }
+}
+
+import { JWT } from "next-auth/jwt"
+declare module "next-auth/jwt" {
+    interface JWT {
+        id: string
+        profName: string
+        email: string
+        username: string
     }
 }

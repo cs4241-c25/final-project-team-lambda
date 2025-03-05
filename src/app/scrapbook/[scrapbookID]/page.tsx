@@ -281,7 +281,7 @@ export default function Scrapbook() {
                     <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
                 { session?.user && 
-                    <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
+                    <Link href="/profile" className="ml-auto no-underline">{session.user.profName}</Link>
                 }
             </header>
         );

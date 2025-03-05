@@ -27,7 +27,7 @@ export default function CreateScrapbookPage() {
         if (result.ok) {
             const data = await result.json();
             // redirects to first page
-            router.push(`/scrapbooks/${data._id}/`);
+            router.push(`/scrapbook/${data._id}/`);
         } else {
             setError("Failed to create scrapbook. " + (await result.text()));
         }
