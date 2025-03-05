@@ -6,18 +6,12 @@ export default function Profile() {
     const {data: session} = useSession();
     if (!(session?.user)) return null;
 
-    const [isCheckedName, setIsCheckedName] = useState(false);
-    const [isCheckedEmail, setIsCheckedEmail] = useState(false);
-    const [isReadOnly, setIsReadOnly] = useState(true);
-    const [isReadOnlyEmail, setIsReadOnlyEmail] = useState(true);
+    const [nameIsReadOnly, setNameIsReadOnly] = useState(true);
+    const [emailIsReadOnly, setEmailIsReadOnly] = useState(true);
     const [formData, setFormData] = useState({
         name: session.user.profName,
         email: session.user.email,
     });
-
-    
-
-    console.log(session);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const {name, value} = e.target;
@@ -25,30 +19,9 @@ export default function Profile() {
             ...prevData,
             [name]: value
         }));
-        //console.log(session.user);
-    }
-
-    const handCheckboxChangeName = (event: ChangeEvent<HTMLInputElement>) => {
-        setIsCheckedName(event.target.checked);
-        if (event.target.checked) {
-            setIsReadOnly(false)
-        } else {
-            setIsReadOnly(true)
-        }
-    }
-
-    const handCheckboxChangeEmail = (event: ChangeEvent<HTMLInputElement>) => {
-        setIsCheckedEmail(event.target.checked);
-        if (event.target.checked) {
-            setIsReadOnlyEmail(false)
-        } else {
-            setIsReadOnlyEmail(true)
-        }
     }
 
     const clickHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
-        console.log(formData)
-
         const formName = formData.name;
         const email = formData.email;
         const username = session.user.username;
@@ -60,37 +33,45 @@ export default function Profile() {
             })
         })
 
-        
-        if (!update.ok) {
-            console.log("Cool")
-        } else {
-            console.log("Cooler")
-        }
-        
-
         event.preventDefault();
     }
 
     return (
-        <main>
-            <form>
-                <h1>Profile Information</h1>
-
-                <h2>Username:{session.user.username} </h2>
-
-                <label htmlFor="name">Name: </label>
-                <input type="text" readOnly={isReadOnly} id="name" name={"name"} onChange={handleInputChange} defaultValue={session.user.profName}/>
-                <input type={"checkbox"} checked={isCheckedName} onChange={handCheckboxChangeName}/>
-
-                <br/>
-
-                <label htmlFor={"email"}>Email: </label>
-                <input type={"text"} readOnly={isReadOnlyEmail} id={"email"} name={"email"} onChange={handleInputChange} defaultValue={session.user.email}/>
-                <input type={"checkbox"} checked={isCheckedEmail} onChange={handCheckboxChangeEmail}/>
-
-                <br/>
-
-                <button type={"button"} onClick={clickHandler}>Update</button>
+        <main className="flex flex-col m-auto items-center gap-4">
+            <h2>Hello, {session.user.username}!</h2>
+            <form className="flex flex-col gap-4 w-[400px]">
+                <div className="flex gap-2 items-center">
+                    <label htmlFor="name">Name:</label>
+                    <input
+                        type="text" disabled={nameIsReadOnly} id="name" name="name"
+                        onChange={handleInputChange} defaultValue={session.user.profName}
+                        className="flex-grow px-2 py-1 disabled:border-gray-300"
+                    />
+                    <label htmlFor="edit-name" className="cursor-pointer w-12 py-1.5 text-center bg-[--mediumgreen] rounded"
+                    >{nameIsReadOnly ? "Edit" : "Lock"}</label>
+                    <input
+                        id="edit-name" type="checkbox" checked={!nameIsReadOnly}
+                        onChange={() => setNameIsReadOnly(!nameIsReadOnly)} hidden
+                    />
+                </div>
+                <div className="flex gap-2 mb-4 items-center">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="text" disabled={emailIsReadOnly} id={"email"} name={"email"}
+                        onChange={handleInputChange} defaultValue={session.user.email}
+                        className="flex-grow px-2 py-1 disabled:border-gray-300"
+                    /> 
+                    <label htmlFor="edit-email" className="cursor-pointer w-12 py-1.5 text-center bg-[--mediumgreen] rounded"
+                    >{emailIsReadOnly ? "Edit" : "Lock"}</label>
+                    <input
+                        id="edit-email" type="checkbox" checked={!emailIsReadOnly}
+                        onChange={() => setEmailIsReadOnly(!emailIsReadOnly)} hidden
+                    />
+                </div>
+                <button
+                    type={"button"} onClick={clickHandler}
+                    className="bg-[--mediumgreen] text-white p-2 rounded"
+                >Update</button>
             </form>
         </main>
     );
