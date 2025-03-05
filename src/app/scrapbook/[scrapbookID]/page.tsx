@@ -310,7 +310,7 @@ export default function Scrapbook() {
                 </button>
 
                 { session?.user && 
-                    <Link href="/profile" className="ml-auto no-underline">{session.user.name}</Link>
+                    <Link href="/profile" className="ml-auto no-underline">{session.user.profName}</Link>
                 }
             </header>
         );
