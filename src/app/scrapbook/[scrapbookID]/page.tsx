@@ -300,7 +300,7 @@ export default function Scrapbook() {
                 <h2>{scrapbook.title}</h2>
                 <p>{saveStatus}</p>
                 { saveStatus === "Unsaved changes" &&
-                    <button className="bg-[--darkgreen] px-4 py-2 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
+                    <button className="bg-[--darkgreen] px-2 py-0.5 rounded" onClick={() => forceSave(scrapbook)}>Save</button>
                 }
                 <button
                     className="bg-[--darkgreen] px-2 py-0.5 rounded ml-2 "
