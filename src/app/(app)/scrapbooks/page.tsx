@@ -1,6 +1,7 @@
 import { getSession } from "@/lib/auth";
 import { getScrapbooks } from "@/lib/db";
 import Link from "next/link";
+import DeleteScrapbook from "./DeleteScrapbook";
 
 export default async function Scrapbooks() {
     const session = await getSession();
@@ -26,11 +27,12 @@ export default async function Scrapbooks() {
                     <li key={scrapbook._id}>
                         <Link
                             href={`/scrapbook/${scrapbook._id}`}
-                            className="flex flex-col no-underline rounded-md bg-[--mediumgreen] p-2 w-[250px] h-[150px] hover:bg-[--darkgreen]"
+                            className="flex items-start flex-col no-underline rounded-md bg-[--mediumgreen] p-2 w-[250px] h-[150px] hover:bg-[--darkgreen]"
                         >
                             <h2 className="mb-auto">{scrapbook.title}</h2>
                             <p>{scrapbook.visibility == "public" ? "Public" : "Private"}</p>
                             <p>{scrapbook.width} x {scrapbook.height}</p>
+                            <DeleteScrapbook scrapbookID={scrapbook._id} />
                         </Link>
                     </li>
                 ))}
