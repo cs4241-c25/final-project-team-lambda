@@ -136,8 +136,8 @@ export async function register(username: string, password: string): Promise<Logi
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
     const id = uuid();
-    const email = "";
-    const profName = username
+    const email = "email";
+    const profName = username;
 
     // insert user into database
     const newUser = new User({

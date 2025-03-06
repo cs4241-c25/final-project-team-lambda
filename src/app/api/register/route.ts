@@ -26,7 +26,6 @@ export async function POST(req: Request) {
 
     // attempt to register user
     const result = await register(body.username, body.password);
-    console.log(result);
 
     // send result
     if (result.ok) {

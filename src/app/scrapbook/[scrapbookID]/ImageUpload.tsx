@@ -63,7 +63,7 @@ export default function ImageUpload({ onUpload }: ImageUploadProps) {
     return (
         <div className="flex flex-col items-center gap-4">
             <input type="file" onChange={handleFileChange} accept="image/*"className="w-full" />
-            {preview && <NextImage fill={true} src={preview} alt="Preview" className="w-32 h-32 object-cover" />}
+            {preview && <NextImage width={200} height={400} src={preview} alt="Preview" className="w-32 h-32 object-contain" />}
             <button
                 onClick={handleUpload}
                 disabled={!image || loading}
