@@ -52,7 +52,6 @@ export default function Stickers({ onSelect }: StickersProps) {
                             className="border p-1 rounded hover:shadow-lg transition"
                         >
                             <Image
-                                fill={true}
                                 src={sticker.url}
                                 alt={`Sticker ${index + 1}`}
                                 width={sticker.width / 4}
