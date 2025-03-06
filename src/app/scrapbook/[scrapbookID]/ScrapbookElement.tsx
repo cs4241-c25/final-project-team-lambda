@@ -1,5 +1,6 @@
 import TransformControls from "./TransformControls";
 import { Element } from "@/lib/models";
+import Image from "next/image";
 
 export default function ScrapbookElement({ el }: { el: Element }) {
     return (
@@ -22,8 +23,9 @@ export default function ScrapbookElement({ el }: { el: Element }) {
             )}
 
             {el.type === "image" && (
-                <img
+                <Image
                     src={el.url}
+                    fill={true}
                     alt="Scrapbook Image"
                     draggable={false}
                     style={{

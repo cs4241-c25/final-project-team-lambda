@@ -10,7 +10,7 @@ interface TransformControlsProps {
 
 export default function TransformControls({ el, children }: TransformControlsProps) {
     // local element state
-    const [element, setElement] = useState({ ...el, isLocked: false });
+    const [element, setElement] = useState<Element & { isLocked?: boolean }>({ ...el, isLocked: false });
     useEffect(() => setElement((prev) => ({ ...el, isLocked: prev.isLocked })), [el]);
     const ref = useRef<HTMLDivElement>(null);
 
@@ -56,63 +56,64 @@ export default function TransformControls({ el, children }: TransformControlsPro
         });
     };
 
-    // function to handle dragging and resizing
-    // prevents dragging if element is locked and saves the starting position
-    const handleMouseMove = (e: MouseEvent) => {
-        if (element.isLocked) return;
-        const deltaX = e.clientX - startPos.mouseX;
-        const deltaY = e.clientY - startPos.mouseY;
+    useEffect(() => {
+        // function to handle dragging and resizing
+        // prevents dragging if element is locked and saves the starting position
+        const handleMouseMove = (e: MouseEvent) => {
+            if (element.isLocked) return;
+            const deltaX = e.clientX - startPos.mouseX;
+            const deltaY = e.clientY - startPos.mouseY;
 
-        if (dragging) {
-            setElement({
-                ...element,
-                position: { x: startPos.elementX + deltaX, y: startPos.elementY + deltaY },
-            });
-        } else if (resizing) {
-            if (element.type !== "circle") {
+            if (dragging) {
                 setElement({
                     ...element,
-                    size: {
-                        x: Math.max(20, startSize.width + deltaX),
-                        y: Math.max(20, startSize.height + deltaY),
-                    },
+                    position: { x: startPos.elementX + deltaX, y: startPos.elementY + deltaY },
                 });
-            } else if (element.type == "circle") {
-                const newDiameter = Math.max(20, startSize.width + deltaX);
+            } else if (resizing) {
+                if (element.type !== "circle") {
+                    setElement({
+                        ...element,
+                        size: {
+                            x: Math.max(20, startSize.width + deltaX),
+                            y: Math.max(20, startSize.height + deltaY),
+                        },
+                    });
+                } else if (element.type == "circle") {
+                    const newDiameter = Math.max(20, startSize.width + deltaX);
+                    setElement({
+                        ...element,
+                        size: newDiameter / 2,
+                    });
+                }
+            } else if (rotating) {
+                if (!("rotation" in element)) return;
+
+                const rect = ref.current?.getBoundingClientRect();
+                if (!rect) return;
+
+                const centerX = rect.left + rect.width / 2;
+                const centerY = rect.top + rect.height / 2;
+
+                const angle = (Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90 + 360) % 360;
                 setElement({
                     ...element,
-                    size: newDiameter / 2,
+                    rotation: Math.round(angle),
                 });
             }
-        } else if (rotating) {
-            if (!("rotation" in element)) return;
+        };
 
-            const rect = ref.current?.getBoundingClientRect();
-            if (!rect) return;
+        // stops dragging and resizing
+        const handleMouseUp = () => {
+            if (dragging) setDragging(false);
+            if (resizing) setResizing(false);
+            if (rotating) setRotating(false);
 
-            const centerX = rect.left + rect.width / 2;
-            const centerY = rect.top + rect.height / 2;
+            // update the element, removing the isLocked property
+            const { ...newElement } = element;
+            delete newElement.isLocked;
+            updateSelectedElement(newElement);
+        };
 
-            const angle = (Math.atan2(e.clientY - centerY, e.clientX - centerX) * (180 / Math.PI) + 90 + 360) % 360;
-            setElement({
-                ...element,
-                rotation: Math.round(angle),
-            });
-        }
-    };
-
-    // stops dragging and resizing
-    const handleMouseUp = () => {
-        if (dragging) setDragging(false);
-        if (resizing) setResizing(false);
-        if (rotating) setRotating(false);
-
-        // update the element, removing the isLocked property
-        const { isLocked, ...newElement } = element;
-        updateSelectedElement(newElement);
-    };
-
-    useEffect(() => {
         if (dragging || resizing || rotating) {
             window.addEventListener("mousemove", handleMouseMove);
             window.addEventListener("mouseup", handleMouseUp);
@@ -124,7 +125,7 @@ export default function TransformControls({ el, children }: TransformControlsPro
             window.removeEventListener("mousemove", handleMouseMove);
             window.removeEventListener("mouseup", handleMouseUp);
         };
-    }, [dragging, resizing, rotating, startPos, startSize, element]);
+    }, [dragging, resizing, rotating, startPos, startSize, element, updateSelectedElement]);
 
     // function to start resizing
     const handleResizeMouseDown = (e: React.MouseEvent<HTMLDivElement, MouseEvent>) => {

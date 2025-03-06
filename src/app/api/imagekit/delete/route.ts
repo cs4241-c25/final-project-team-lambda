@@ -1,6 +1,4 @@
 import { NextResponse } from "next/server";
-import imagekit from "@/lib/imagekit";
-
 
 export async function POST(req: Request) {
     try {

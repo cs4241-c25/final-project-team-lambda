@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 
+import NextImage from "next/image";
+
 interface ImageUploadProps {
     onUpload: (url: string, width: number, height: number) => void;
 }
@@ -61,7 +63,7 @@ export default function ImageUpload({ onUpload }: ImageUploadProps) {
     return (
         <div className="flex flex-col items-center gap-4">
             <input type="file" onChange={handleFileChange} accept="image/*"className="w-full" />
-            {preview && <img src={preview} alt="Preview" className="w-32 h-32 object-cover" />}
+            {preview && <NextImage fill={true} src={preview} alt="Preview" className="w-32 h-32 object-cover" />}
             <button
                 onClick={handleUpload}
                 disabled={!image || loading}

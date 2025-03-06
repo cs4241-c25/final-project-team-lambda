@@ -1,16 +1,17 @@
 "use client";
-import React, { useState, ChangeEvent } from "react";
+import React, { useState } from "react";
 import { useSession } from "next-auth/react";
+import { useRouter } from "next/navigation";
 
 export default function Profile() {
+    const router = useRouter();
     const {data: session} = useSession();
-    if (!(session?.user)) return null;
 
     const [nameIsReadOnly, setNameIsReadOnly] = useState(true);
     const [emailIsReadOnly, setEmailIsReadOnly] = useState(true);
     const [formData, setFormData] = useState({
-        name: session.user.profName,
-        email: session.user.email,
+        name: session?.user.profName,
+        email: session?.user.email,
     });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -24,9 +25,9 @@ export default function Profile() {
     const clickHandler = async (event: React.MouseEvent<HTMLButtonElement>) => {
         const formName = formData.name;
         const email = formData.email;
-        const username = session.user.username;
+        const username = session?.user.username;
 
-        const update = await fetch("/api/update", {
+        await fetch("/api/update", {
             method: "POST",
             body: JSON.stringify({
                 formName, email , username
@@ -34,6 +35,13 @@ export default function Profile() {
         })
 
         event.preventDefault();
+    }
+
+    // If session is not defined, return null and redirect to login page
+
+    if (!session) {
+        router.push("/login");
+        return null;
     }
 
     return (

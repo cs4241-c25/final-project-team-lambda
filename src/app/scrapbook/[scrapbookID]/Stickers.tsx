@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Image from "next/image";
 
 interface Sticker {
     url: string;
@@ -50,7 +51,8 @@ export default function Stickers({ onSelect }: StickersProps) {
                             onClick={() => onSelect(sticker.url, sticker.width, sticker.height)}
                             className="border p-1 rounded hover:shadow-lg transition"
                         >
-                            <img
+                            <Image
+                                fill={true}
                                 src={sticker.url}
                                 alt={`Sticker ${index + 1}`}
                                 width={sticker.width / 4}
