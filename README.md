@@ -112,6 +112,27 @@ Response:
 
 Updates a scrapbook in the database. Returns an error if the user is not authenticated does not match the owner of the scrapbook.
 
+`/scrapbooks/delete`
+---
+
+Type: `DELETE`
+
+Request body:
+```typescript
+{ scrapbookID: string }
+```
+
+Response:
+```typescript
+// 2xx response code:
+"Scrapbook deleted successfully"
+
+// 4xx response code:
+"error message"
+```
+
+Deletes a scrapbook in the database.
+
 ## Data Model
 
 Below are the data structures used to store information in the database.

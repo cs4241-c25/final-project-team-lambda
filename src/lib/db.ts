@@ -256,6 +256,36 @@ export async function saveScrapbook(scrapbook: IScrapbook, owner: string): Promi
 }
 
 /**
+ * Deletes a scrapbook owned by a user
+ * @async
+ * @param {string} id - The ID of the scrapbook to delete
+ * @param {string} owner - The user ID of the scrapbook owner
+ * @returns {Promise<DBResult<null>>} Result of scrapbook deletion
+ */
+export async function deleteScrapbook(id: string, owner: string): Promise<DBResult<null>> {
+    await connect();
+
+    try {
+        // Check if the scrapbook exists and if the user is authorized to delete it
+        const scrapbook: IScrapbook | null = await Scrapbook.findById(id);
+        if (!scrapbook) {
+            return { ok: false, code: 404, error: "Scrapbook not found." };
+        }
+        if (scrapbook.owner !== owner) {
+            return { ok: false, code: 403, error: "Unauthorized." };
+        }
+
+        // If authorized, delete the scrapbook
+        await Scrapbook.deleteOne({ _id: id });
+
+        return { ok: true, code: 204, data: null };
+    } catch (error) {
+        console.error("Error deleting scrapbook: ", error);
+        return { ok: false, code: 500, error: "Error deleting scrapbook." };
+    }
+}
+
+/**
  * Retrieves all premade Stickers
  * @async
  * @returns {Promise<DBResult<ISticker[]>>} Returns Stickers
@@ -264,7 +294,7 @@ export async function getStickers(): Promise<DBResult<ISticker[]>> {
     await connect();
 
     try {
-        const stickers: ISticker[] = await Sticker.find({}).lean();
+        const stickers: ISticker[] = await Sticker.find({});
 
         // Ensure stickers are JSON serializable
         const serializedStickers = stickers.map(sticker => ({
