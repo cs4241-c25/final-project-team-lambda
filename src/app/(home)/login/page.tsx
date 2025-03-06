@@ -11,8 +11,6 @@ export default function Login() {
     const params = useSearchParams();
     const [loginStatus, setLoginStatus] = useState("");
 
-    const imageURL = "https://picsum.photos/1920/1080";
-
     // redirect to get rid of that ugly callbackUrl search param
     // it should probably be re-implemented at some point
     useEffect(() => {
@@ -49,7 +47,7 @@ export default function Login() {
                     <input type="password" name="password" id="password" required className="p-2 mb-4" />
                     <div className="flex gap-2 justify-between items-center">
                         <button type="submit" className="px-4 py-2 bg-[--mediumgreen] rounded text-white">Log In</button>
-                        <Link href="/register">Don't have an account?</Link>
+                        <Link href="/register">Don&apos;t have an account?</Link>
                     </div>
                     <p>{loginStatus}</p>
                 </form>

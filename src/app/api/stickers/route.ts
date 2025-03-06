@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getStickers } from "@/lib/db";
 
-export async function GET(_req: Request) {
+export async function GET() {
     const result = await getStickers();
 
     if (result.ok) {
