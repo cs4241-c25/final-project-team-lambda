@@ -1,6 +1,7 @@
 # LifeLog
 
 The final project for CS4241: Webware taught by Prof. Wilson Wong. Created by AJ Aguiar, Moet O'Donnell, Sam Randa, Charlotte Roscoe, and Ellie Scharpf.
+
 Video Link: https://1drv.ms/v/c/5883912109d08702/EXEkWIFATHRFh86QW3CwrX8B76Y5SefACh_sblxp7iPUgw?e=83lDBc 
 
 ## Development
