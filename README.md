@@ -2,7 +2,43 @@
 
 The final project for CS4241: Webware taught by Prof. Wilson Wong. Created by AJ Aguiar, Moet O'Donnell, Sam Randa, Charlotte Roscoe, and Ellie Scharpf.
 
-Video Link: https://1drv.ms/v/c/5883912109d08702/EXEkWIFATHRFh86QW3CwrX8B76Y5SefACh_sblxp7iPUgw?e=83lDBc 
+## Overview
+
+### Description
+
+LifeLog is a scrapbook creation platform where you create your own multi-page scrapbooks with text, shapes, images, and stickers. You start by either registering an account with a username and password or logging in to an existing account. On the profile page, it is also possible to change your display name. Once logged in, you can start creating your scrapbook. When creating a scrapbook, you can set its dimensions, and whether or not the scrapbook should be public or private. 
+
+Once a scrapbook is created, the elements described previously can be added, and you can resize, move, and rotate elements through dragging, or manual inputs. You can upload your own images, or if you do not have any, our program has a list of premade images and stickers available for use by the user. Pages can be saved manually or will automatically save periodically. Additional pages can be added and navigated through with arrow buttons. Once you are happy with your scrapbook, you can export it as a flattened image in .PNG format. Lastly, in the Scrapbooks tab, you can view all of your scrapbooks in one place.
+
+You can try out LifeLog at https://lambda-lifelog.vercel.app/.
+
+### Using LifeLog
+
+To use the app, you must register a new account with a unique username and password. If you prefer to use a premade account, log in using the following credentials.
+```
+Username: sam
+Password: password
+```
+
+### Technologies
+
+React was used for element reactivity. It powered the scrapbook editor, scrapbook browser, and form submission actions. Built on top of React, Next.js was used for page routing and API routes. The App Router allowed us to make each page into its own folder, rendering different React components as the user navigated the application. Additionally, API routes acted as a midpoint between the frontend components and database functions, performing authentication and data validation. NextAuth was used for authentication, allowing us to track session information. To store user and scrapbook data, we took advantage of MongoDB’s flexible document model to create a 1-to-1 mapping between frontend scrapbook manipulation and backend storage. To facilitate uploading images, we used Imagekit for image storage and retrieval. In our scrapbook, we simply rendered images using the image links provided.
+
+### Challenges
+
+Integrating features and each other’s work was a bit of a challenge since we had to ensure that components like the toolbox, canvas, login, and other elements worked together smoothly without conflicts. Keeping the selected elements updated in both the canvas and the toolbox in real time was a bit tricky, as was deleting elements dynamically without disrupting the UI. Scrapbook updates proved to be difficult as well; since React is built upon immutable objects, we were required to recreate the scrapbook object every time we wanted to update an element. Luckily, libraries like Immer make this process easier.
+
+### Team Roles
+
+- AJ: Made the profile page, along with backend routing having to do with updating the information so it can be accessed later
+- Charlotte: Data Modeling assistance, Dynamic Page Routing for scrapbooks, Scrapbook creation page, integration work, Image Upload, Premade Stickers Component
+- Ellie: Design and styling of the pages, scrapbook deletion
+- Moet: Toolbox (text, shapes, position, sizing, color selection, fonts, font size), dragging and resizing elements, deleting elements off canvas, exporting scrapbook as an image, locking/unlocking elements
+- Sam: Project setup, authentication, feature integration, data modeling, scrapbook viewing, scrapbook navigation, scrapbook saving
+
+### Demo Video
+
+A demo of our application can be found at https://1drv.ms/v/c/5883912109d08702/EXEkWIFATHRFh86QW3CwrX8B76Y5SefACh_sblxp7iPUgw?e=83lDBc.
 
 ## Development
 
